@@ -23,16 +23,16 @@ StreamHub is a modern, responsive web application for exploring trending movies,
 ## 🖼️ Screenshots
 
 ### 📍 Home Dashboard & Content Filter
-![StreamHub Home Showcase](screenshots/home.png.png)
+![StreamHub Home Showcase](screenshots/home.png)
 
 ### 📍 Title Detail & Streaming Player
-![StreamHub Watch Screen](screenshots/actor.png.png)
+![StreamHub Watch Screen](screenshots/watch.png)
 
 ### 📍 Actor Profile & Filmography
-![StreamHub Actor Page](screenshots/watch.png.png)
+![StreamHub Actor Page](screenshots/actor.png)
 
 ### 📍 Personal Watchlist
-![StreamHub Watchlist Screen](screenshots/watchlist.png.png)
+![StreamHub Watchlist Screen](screenshots/watchlist.png)
 
 ---
 
@@ -48,15 +48,20 @@ StreamHub is a modern, responsive web application for exploring trending movies,
 
 ## 🚀 Step-by-Step Setup Instructions
 
-Follow these steps to set up and run StreamHub locally on your machine.
+Follow these step-by-step instructions to get StreamHub running on your local development environment.
 
 ### 1. Prerequisites
-Ensure you have Python installed on your system:
-- Python 3.10 or higher
-- `pip` (Python package manager)
+Ensure you have the following installed on your machine:
+- **Python 3.10+** (Verify by running `python --version` or `python3 --version` in terminal)
+- **Git** (Verify by running `git --version`)
+- **pip** (Python package installer)
+
+---
 
 ### 2. Clone the Repository
-Clone this repository to your local machine:
+Open your terminal or command prompt and clone the project:
+
 ```bash
 git clone [https://github.com/MrNoBody0402/StreamHUB.git](https://github.com/MrNoBody0402/StreamHUB.git)
 cd StreamHUB
+```
