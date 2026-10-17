@@ -22,17 +22,28 @@ StreamHub is a modern, responsive web application for exploring trending movies,
 
 ## 🖼️ Screenshots
 
-### 📍 Home Dashboard & Content Filter
-![StreamHub Home Showcase](screenshots/home.png.png)
-
-### 📍 Title Detail & Streaming Player
-![StreamHub Watch Screen](screenshots/watch.png.png)
-
-### 📍 Actor Profile & Filmography
-![StreamHub Actor Page](screenshots/actor.png.png)
-
-### 📍 Personal Watchlist
-![StreamHub Watchlist Screen](screenshots/watchlist.png.png)
+<table>
+  <tr>
+    <td align="center">
+      <b>Home Dashboard & Content Filter</b><br/>
+      <img src="screenshots/home.png.png" width="450" alt="Home Showcase">
+    </td>
+    <td align="center">
+      <b>Title Detail & Streaming Player</b><br/>
+      <img src="screenshots/watch.png.png" width="450" alt="Watch Screen">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Actor Profile & Filmography</b><br/>
+      <img src="screenshots/actor.png.png" width="450" alt="Actor Page">
+    </td>
+    <td align="center">
+      <b>Personal Watchlist</b><br/>
+      <img src="screenshots/watchlist.png.png" width="450" alt="Watchlist Screen">
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -103,6 +114,7 @@ Set up Django's internal database tables:
 ```bash
 python manage.py migrate
 ```
+---
 
 ### 6. Start the Development Server
 Launch the application locally:
