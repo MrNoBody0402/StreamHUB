@@ -1,28 +1,125 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub</title>
+    <title>{% block title %}StreamHub — Stream Movies & TV Series{% endblock %}</title>
+    <meta name="description" content="Discover, search, and stream your favorite movies and TV series in high definition on StreamHub.">
+    <meta name="theme-color" content="#090a0f">
 
     <!-- Favicon Logo -->
     <link rel="icon" type="image/x-icon" href="{% static 'catalog/favicon.ico' %}">
 
+    <!-- Google Fonts: Outfit (Headings) & Plus Jakarta Sans (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN with Custom Theme Configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            950: '#07080c',
+                            900: '#0d0f15',
+                            850: '#121520',
+                            800: '#171b28',
+                            700: '#222738',
+                        },
+                        brand: {
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        display: ['"Outfit"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow-sm': '0 0 15px -3px rgba(225, 29, 72, 0.3)',
+                        'glow-md': '0 0 25px -4px rgba(225, 29, 72, 0.35)',
+                        'glow-lg': '0 0 40px -6px rgba(225, 29, 72, 0.45)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #272b38;
+            border-radius: 9999px;
+            border: 2px solid #090a0f;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e11d48;
+        }
+
+        /* Ambient Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { 
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+        }
 
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.05); }
+        }
+        .animate-ambient-glow {
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-nav {
+            background: rgba(10, 11, 16, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(18, 21, 32, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(225, 29, 72, 0.4);
+        }
+
+        /* Input styling */
         .search-input-focus {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .search-input-focus:focus {
-            box-shadow: 0 0 20px rgba(225, 29, 72, 0.35);
-            border-color: #e11d48;
+            box-shadow: 0 0 25px rgba(225, 29, 72, 0.4);
+            border-color: #f43f5e;
+            background: rgba(18, 21, 32, 0.95);
         }
 
         @keyframes spin {
@@ -33,83 +130,174 @@
         }
     </style>
 </head>
-<body class="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-rose-500 selection:text-white antialiased">
+<body class="bg-[#07080c] text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-rose-500 selection:text-white antialiased relative overflow-x-hidden">
     
-    <!-- Ambient Background Lighting Accent -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-rose-600/10 blur-[140px] pointer-events-none -z-10 rounded-full"></div>
+    <!-- Multi-layered Ambient Background Glows -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-rose-600/15 blur-[160px] pointer-events-none -z-10 rounded-full animate-ambient-glow"></div>
+    <div class="fixed top-[40%] right-[-100px] w-[500px] h-[500px] bg-purple-600/10 blur-[180px] pointer-events-none -z-10 rounded-full"></div>
+    <div class="fixed bottom-0 left-[-100px] w-[500px] h-[500px] bg-amber-600/8 blur-[180px] pointer-events-none -z-10 rounded-full"></div>
 
     <!-- Glassmorphic Header Navigation -->
-    <nav class="p-4 bg-zinc-950/70 backdrop-blur-xl border-b border-white/10 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
-        <div class="flex items-center gap-8">
-            <a href="/" class="text-2xl font-black bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 bg-clip-text text-transparent tracking-wider hover:opacity-90 transition transform active:scale-95">
-                STREAMHUB
-            </a>
+    <header class="sticky top-0 z-50 glass-nav shadow-glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
             
-            <!-- Genre Pills Navigation -->
-            <div class="hidden lg:flex items-center gap-2 text-xs font-medium">
-                <a href="/?genre=action" class="px-3.5 py-1.5 rounded-full bg-zinc-900/80 hover:bg-rose-600 border border-white/5 hover:border-rose-500/50 text-zinc-300 hover:text-white transition shadow-sm">Action</a>
-                <a href="/?genre=comedy" class="px-3.5 py-1.5 rounded-full bg-zinc-900/80 hover:bg-rose-600 border border-white/5 hover:border-rose-500/50 text-zinc-300 hover:text-white transition shadow-sm">Comedy</a>
-                <a href="/?genre=scifi" class="px-3.5 py-1.5 rounded-full bg-zinc-900/80 hover:bg-rose-600 border border-white/5 hover:border-rose-500/50 text-zinc-300 hover:text-white transition shadow-sm">Sci-Fi</a>
-                <a href="/?genre=horror" class="px-3.5 py-1.5 rounded-full bg-zinc-900/80 hover:bg-rose-600 border border-white/5 hover:border-rose-500/50 text-zinc-300 hover:text-white transition shadow-sm">Horror</a>
-                <a href="/?genre=animation" class="px-3.5 py-1.5 rounded-full bg-zinc-900/80 hover:bg-rose-600 border border-white/5 hover:border-rose-500/50 text-zinc-300 hover:text-white transition shadow-sm">Animation</a>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4 w-full md:w-auto">
-            <a href="{% url 'watchlist' %}" class="px-3.5 py-2 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-xs font-semibold transition border border-white/10 flex items-center gap-1.5 shadow-md">
-                ❤️ <span class="hidden sm:inline">Watchlist</span>
-            </a>
-
-            <!-- Animated Search Form -->
-            <form action="/" method="GET" id="search-form" onsubmit="handleSearchSubmit(event)" class="relative flex items-center gap-2 w-full md:w-auto">
-                <div class="relative w-full md:w-64">
-                    <input 
-                        type="text" 
-                        name="q" 
-                        id="search-input"
-                        placeholder="Search movies & shows..." 
-                        value="{{ query|default:'' }}"
-                        class="search-input-focus bg-zinc-900/90 text-white pl-9 pr-8 py-2 rounded-xl border border-white/10 focus:outline-none w-full text-xs placeholder-zinc-500"
-                    >
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
-                        <svg id="search-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <svg id="search-spinner" class="w-4 h-4 text-rose-500 animate-spin-fast hidden" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <!-- Left Branding & Primary Links -->
+            <div class="flex items-center gap-6 lg:gap-8">
+                <a href="/" class="group flex items-center gap-3 active:scale-95 transition transform duration-200">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 via-red-600 to-amber-600 flex items-center justify-center shadow-glow-sm group-hover:shadow-glow-md group-hover:scale-105 transition duration-300">
+                        <svg class="w-5 h-5 text-white ml-0.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
                         </svg>
                     </div>
-                </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-display font-black text-2xl tracking-wider bg-gradient-to-r from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                                STREAM<span class="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">HUB</span>
+                            </span>
+                            <span class="px-1.5 py-0.5 text-[9px] font-extrabold tracking-widest uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-md">HD</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Quick Genre Pills (Desktop) -->
+                <nav class="hidden lg:flex items-center gap-1.5 text-xs font-semibold">
+                    <a href="/?genre=action" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
+                        <span>💥 Action</span>
+                    </a>
+                    <a href="/?genre=comedy" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
+                        <span>😂 Comedy</span>
+                    </a>
+                    <a href="/?genre=scifi" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
+                        <span>🚀 Sci-Fi</span>
+                    </a>
+                    <a href="/?genre=horror" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
+                        <span>👻 Horror</span>
+                    </a>
+                    <a href="/?genre=animation" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
+                        <span>🎨 Animation</span>
+                    </a>
+                </nav>
+            </div>
 
-                <button type="submit" id="search-btn" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all duration-200 active:scale-95 shadow-lg shadow-rose-600/25 flex items-center gap-1">
-                    <span>Search</span>
-                </button>
-            </form>
+            <!-- Right Controls: Watchlist Button & Search Input -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                
+                <!-- Watchlist Quick Access with Live Badge -->
+                <a href="{% url 'watchlist' %}" class="relative group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-xs font-bold text-zinc-200 hover:text-white transition border border-white/10 hover:border-rose-500/40 shadow-sm active:scale-95">
+                    <span class="text-rose-500 group-hover:scale-110 transition transform">❤️</span>
+                    <span class="hidden sm:inline">Watchlist</span>
+                    <span id="nav-watchlist-count" class="hidden px-1.5 py-0.2 text-[10px] font-extrabold rounded-full bg-rose-600 text-white shadow-sm">0</span>
+                </a>
+
+                <!-- Animated Search Form -->
+                <form action="/" method="GET" id="search-form" onsubmit="handleSearchSubmit(event)" class="relative flex items-center gap-2 flex-grow sm:flex-grow-0">
+                    <div class="relative w-full sm:w-64">
+                        <input 
+                            type="text" 
+                            name="q" 
+                            id="search-input"
+                            placeholder="Search titles, actors..." 
+                            value="{{ query|default:'' }}"
+                            autocomplete="off"
+                            class="search-input-focus bg-zinc-900/90 text-white pl-9 pr-9 py-2 rounded-xl border border-white/10 focus:outline-none w-full text-xs font-medium placeholder-zinc-500 transition-all duration-300"
+                        >
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none">
+                            <svg id="search-icon" class="w-3.5 h-3.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <svg id="search-spinner" class="w-3.5 h-3.5 text-rose-500 animate-spin-fast hidden" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        <span class="hidden md:flex absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[9px] font-mono text-zinc-500 bg-zinc-800/80 rounded border border-white/5 pointer-events-none">/</span>
+                    </div>
+
+                    <button type="submit" id="search-btn" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition duration-200 active:scale-95 shadow-glow-sm hover:shadow-glow-md flex items-center justify-center shrink-0">
+                        <span>Search</span>
+                    </button>
+                </form>
+            </div>
         </div>
-    </nav>
+    </header>
     
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="p-6 bg-zinc-950/80 border-t border-white/5 text-center text-zinc-500 text-xs backdrop-blur-md">
-        StreamHub catalog powered by TMDB API.
+    <!-- Elevated Footer -->
+    <footer class="mt-auto border-t border-white/5 bg-zinc-950/70 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center justify-center md:justify-start gap-2.5">
+                        <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-rose-500 to-amber-500 flex items-center justify-center shadow-sm">
+                            <svg class="w-3.5 h-3.5 text-white ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                        <span class="font-display font-black text-lg tracking-wider text-white">
+                            STREAM<span class="text-rose-500">HUB</span>
+                        </span>
+                    </div>
+                    <p class="text-xs text-zinc-400 max-w-sm">
+                        High-definition streaming directory powered by TMDB. Browse thousands of popular movies, trending series, and cast details.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400 font-medium">
+                    <a href="/" class="hover:text-rose-400 transition">Explore</a>
+                    <a href="/?type=movie" class="hover:text-rose-400 transition">Movies</a>
+                    <a href="/?type=tv" class="hover:text-rose-400 transition">TV Series</a>
+                    <a href="{% url 'watchlist' %}" class="hover:text-rose-400 transition">Watchlist</a>
+                </div>
+
+                <div class="text-xs text-zinc-400 flex flex-col items-center md:items-end gap-1">
+                    <span>Data provided by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener" class="text-rose-400 hover:underline font-semibold">TMDB API</a></span>
+                    <span class="text-[11px] text-zinc-400">StreamHub does not host files on its servers.</span>
+                </div>
+            </div>
+        </div>
     </footer>
 
+    <!-- Global Helpers & Interactive Scripts -->
     <script>
+        function updateWatchlistCounter() {
+            try {
+                const list = JSON.parse(localStorage.getItem('streamhub_watchlist') || '[]');
+                const badge = document.getElementById('nav-watchlist-count');
+                if (badge) {
+                    badge.innerText = list.length;
+                    badge.classList.toggle('hidden', list.length === 0);
+                }
+            } catch (e) {
+                console.error("Watchlist count error", e);
+            }
+        }
+
         function handleSearchSubmit(e) {
             const input = document.getElementById('search-input');
             const searchIcon = document.getElementById('search-icon');
             const searchSpinner = document.getElementById('search-spinner');
             const searchBtn = document.getElementById('search-btn');
 
-            if (input.value.trim() !== '') {
-                searchIcon.classList.add('hidden');
-                searchSpinner.classList.remove('hidden');
-                searchBtn.classList.add('opacity-80');
+            if (input && input.value.trim() !== '') {
+                if (searchIcon) searchIcon.classList.add('hidden');
+                if (searchSpinner) searchSpinner.classList.remove('hidden');
+                if (searchBtn) searchBtn.classList.add('opacity-80');
             }
         }
+
+        // Quick Keyboard Shortcut: Press '/' to focus search
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) searchInput.focus();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', updateWatchlistCounter);
+        window.addEventListener('storage', updateWatchlistCounter);
     </script>
 </body>
 </html>

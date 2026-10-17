@@ -1,40 +1,87 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto">
-    <a href="/" class="inline-block text-zinc-400 hover:text-white mb-4 text-sm">&larr; Back to Catalog</a>
+<div class="max-w-6xl mx-auto py-2">
+    <!-- Back Breadcrumb Link -->
+    <a href="/" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition duration-200 text-xs font-semibold mb-5 group">
+        <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span>Back to Catalog</span>
+    </a>
     
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-        <h1 class="text-3xl font-bold">{% if details.title %}{{ details.title }}{% else %}{{ details.name }}{% endif %}</h1>
-        <button id="watchlist-btn" onclick="toggleWatchlist()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 font-semibold text-sm transition flex items-center gap-2 border border-zinc-700">
-            <span id="watchlist-icon">❤️</span> <span id="watchlist-text">Add to Watchlist</span>
-        </button>
+    <!-- Title & Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+            <h1 class="text-2xl sm:text-4xl font-display font-black text-white tracking-tight">
+                {% if details.title %}{{ details.title }}{% else %}{{ details.name }}{% endif %}
+            </h1>
+            {% if details.tagline %}
+            <p class="text-zinc-400 text-xs sm:text-sm italic mt-1 font-normal">{{ details.tagline }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="flex items-center gap-3 shrink-0">
+            <button id="watchlist-btn" onclick="toggleWatchlist()" class="px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 font-bold text-xs transition duration-200 flex items-center gap-2 border border-white/10 shadow-sm active:scale-95">
+                <span id="watchlist-icon">❤️</span> 
+                <span id="watchlist-text">Add to Watchlist</span>
+            </button>
+        </div>
     </div>
     
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <div class="flex items-center gap-4 text-sm text-zinc-400">
-            <span>Rating: ⭐ {{ details.vote_average|floatformat:1 }}/10</span>
-            <span>Release: {% if details.release_date %}{{ details.release_date }}{% else %}{{ details.first_air_date }}{% endif %}</span>
-            {% if media_type == 'tv' %}
-            <span class="text-red-500 font-semibold">Season {{ season }} - Episode {{ episode }}</span>
-            {% endif %}
+    <!-- Title Metadata Badges -->
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs mb-6">
+        {% if details.vote_average %}
+        <span class="px-2.5 py-1 rounded-full font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1 shadow-sm">
+            <span>⭐</span> {{ details.vote_average|floatformat:1 }} / 10
+        </span>
+        {% endif %}
+
+        <span class="px-2.5 py-1 rounded-full font-medium bg-zinc-900/80 text-zinc-300 border border-white/5">
+            📅 {% if details.release_date %}{{ details.release_date }}{% else %}{{ details.first_air_date }}{% endif %}
+        </span>
+
+        {% if details.runtime %}
+        <span class="px-2.5 py-1 rounded-full font-medium bg-zinc-900/80 text-zinc-300 border border-white/5">
+            ⏱️ {{ details.runtime }} min
+        </span>
+        {% endif %}
+
+        {% if media_type == 'tv' %}
+        <span class="px-2.5 py-1 rounded-full font-bold bg-rose-600/20 text-rose-400 border border-rose-500/30">
+            Season {{ season }} • Episode {{ episode }}
+        </span>
+        {% endif %}
+
+        {% for g in details.genres %}
+        <span class="hidden sm:inline-block px-2.5 py-1 rounded-full font-medium bg-white/5 text-zinc-400 border border-white/5 text-[11px]">
+            {{ g.name }}
+        </span>
+        {% endfor %}
+    </div>
+
+    <!-- Server Selector Toolbar -->
+    <div class="glass-card p-3 rounded-2xl mb-4 flex flex-wrap items-center justify-between gap-3 shadow-glass">
+        <div class="flex items-center gap-2 text-xs font-bold text-zinc-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Streaming Servers:</span>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs text-zinc-400">Select Server:</span>
             {% for server in servers %}
             <button 
                 onclick="changeServer('{{ server.url }}', this)" 
-                class="server-btn px-3 py-1 rounded text-xs font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition {% if forloop.first %}bg-red-600 text-white{% endif %}"
+                class="server-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition duration-200 border flex items-center gap-1.5 {% if forloop.first %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:border-white/20{% endif %}"
             >
-                {{ server.name }}
+                <span>⚡</span>
+                <span>{{ server.name }}</span>
             </button>
             {% endfor %}
         </div>
     </div>
     
-    <!-- Player Frame Container -->
-    <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-zinc-800 mb-4">
+    <!-- Theater Player Frame Container with Ambient Glow -->
+    <div class="relative w-full aspect-video bg-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(225,29,72,0.25)] border border-white/10 mb-4">
         {% if servers %}
         <iframe 
             id="video-player"
@@ -45,21 +92,37 @@
             allow="autoplay; encrypted-media; picture-in-picture">
         </iframe>
         {% else %}
-        <div class="flex items-center justify-center h-full text-zinc-500">
-            No video player available.
+        <div class="flex flex-col items-center justify-center h-full text-zinc-500 gap-2">
+            <span class="text-3xl">🎬</span>
+            <span class="text-xs">No video stream available at this time.</span>
         </div>
         {% endif %}
     </div>
 
+    <!-- Streaming Notice / Pro-Tip -->
+    <div class="flex items-center gap-2 text-[11px] text-zinc-400 px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5 mb-8">
+        <span class="text-rose-400 font-bold">💡 Pro-Tip:</span>
+        <span>If your stream doesn't load or buffers, select a different server from the list above.</span>
+    </div>
+
+    <!-- TV Series Season & Episode Guide -->
     {% if media_type == 'tv' %}
-    <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800 mb-8">
-        <h2 class="text-lg font-bold mb-3">Select Season & Episode</h2>
-        <div class="flex flex-wrap gap-2 mb-4 pb-3 border-b border-zinc-800">
+    <div class="glass-card p-6 rounded-2xl mb-8 shadow-glass">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-display font-bold text-white flex items-center gap-2">
+                <span class="w-1.5 h-5 bg-rose-500 rounded-full"></span>
+                Select Season & Episode
+            </h2>
+            <span class="text-xs text-zinc-400 font-semibold">Season {{ season }}, Episode {{ episode }}</span>
+        </div>
+
+        <!-- Season Selector Pills -->
+        <div class="flex items-center gap-2 mb-5 pb-3 overflow-x-auto border-b border-white/5">
             {% for s in details.seasons %}
                 {% if s.season_number > 0 %}
                 <a 
                     href="?season={{ s.season_number }}&episode=1" 
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition {% if season == s.season_number %}bg-red-600 text-white{% else %}bg-zinc-800 text-zinc-300 hover:bg-zinc-700{% endif %}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition duration-200 border whitespace-nowrap {% if season == s.season_number %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:border-white/20{% endif %}"
                 >
                     Season {{ s.season_number }}
                 </a>
@@ -67,11 +130,12 @@
             {% endfor %}
         </div>
 
-        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-2">
+        <!-- Episode Selector Grid -->
+        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
             {% for ep in episodes_list %}
             <a 
                 href="?season={{ season }}&episode={{ ep }}" 
-                class="py-2 text-center rounded-lg text-xs font-bold transition border {% if episode == ep %}bg-red-600 border-red-500 text-white{% else %}bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700{% endif %}"
+                class="py-2.5 text-center rounded-xl text-xs font-bold transition duration-200 border {% if episode == ep %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:bg-zinc-800{% endif %}"
             >
                 EP {{ ep }}
             </a>
@@ -80,26 +144,42 @@
     </div>
     {% endif %}
 
-    <!-- Overview -->
-    <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800 mb-8">
-        <h2 class="text-xl font-bold mb-2">Overview</h2>
-        <p class="text-zinc-300 leading-relaxed">{{ details.overview }}</p>
+    <!-- Media Synopsis & Details -->
+    <div class="glass-card p-6 sm:p-8 rounded-2xl mb-8 shadow-glass">
+        <h2 class="text-xl font-display font-bold text-white mb-3 flex items-center gap-2">
+            <span class="w-1.5 h-5 bg-rose-500 rounded-full"></span>
+            Story Overview
+        </h2>
+        <p class="text-zinc-300 text-xs sm:text-sm leading-relaxed max-w-4xl">
+            {% if details.overview %}
+                {{ details.overview }}
+            {% else %}
+                No synopsis available for this title.
+            {% endif %}
+        </p>
     </div>
 
     <!-- Cast Members Section -->
     {% if cast %}
-    <div class="mb-8">
-        <h2 class="text-xl font-bold mb-4 border-l-4 border-red-600 pl-3">Top Cast</h2>
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+    <div class="mb-10">
+        <h2 class="text-xl font-display font-bold text-white mb-5 flex items-center gap-2.5">
+            <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
+            Top Cast & Characters
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {% for actor in cast %}
-            <a href="{% url 'actor_detail' actor.id %}" class="group bg-zinc-900 p-3 rounded-xl border border-zinc-800 hover:border-red-600 transition text-center">
+            <a href="{% url 'actor_detail' actor.id %}" class="group glass-card p-3.5 rounded-2xl border border-white/5 hover:border-rose-500/50 hover:shadow-glow-sm transition duration-300 text-center flex flex-col items-center">
                 {% if actor.profile_path %}
-                <img src="https://image.tmdb.org/t/p/w185{{ actor.profile_path }}" class="w-20 h-20 object-cover rounded-full mx-auto mb-2 group-hover:scale-105 transition">
+                <div class="w-20 h-20 rounded-full overflow-hidden mb-3 border border-white/10 group-hover:scale-105 group-hover:border-rose-500/50 transition duration-300 shadow-md">
+                    <img src="https://image.tmdb.org/t/p/w185{{ actor.profile_path }}" alt="{{ actor.name }}" class="w-full h-full object-cover">
+                </div>
                 {% else %}
-                <div class="w-20 h-20 bg-zinc-800 rounded-full mx-auto mb-2 flex items-center justify-center text-xs text-zinc-500">No Photo</div>
+                <div class="w-20 h-20 bg-zinc-800/90 rounded-full mb-3 flex items-center justify-center text-[10px] text-zinc-500 border border-white/10">
+                    No Photo
+                </div>
                 {% endif %}
-                <p class="font-semibold text-xs truncate group-hover:text-red-500 transition">{{ actor.name }}</p>
-                <p class="text-[10px] text-zinc-400 truncate">{{ actor.character }}</p>
+                <p class="font-bold text-xs text-zinc-100 group-hover:text-rose-400 transition truncate w-full">{{ actor.name }}</p>
+                <p class="text-[10px] text-zinc-400 truncate w-full mt-0.5">{{ actor.character }}</p>
             </a>
             {% endfor %}
         </div>
@@ -120,12 +200,23 @@
         const exists = list.some(item => item.id.toString() === currentItem.id.toString());
         
         const textElem = document.getElementById('watchlist-text');
+        const iconElem = document.getElementById('watchlist-icon');
+        const btnElem = document.getElementById('watchlist-btn');
+
         if (exists) {
-            textElem.innerText = "In Watchlist";
-            document.getElementById('watchlist-btn').classList.add('bg-red-600/20', 'border-red-600');
+            if (textElem) textElem.innerText = "In Watchlist";
+            if (iconElem) iconElem.innerText = "❤️";
+            if (btnElem) {
+                btnElem.classList.add('bg-rose-600/20', 'border-rose-500/60', 'text-rose-300');
+                btnElem.classList.remove('bg-zinc-900/90');
+            }
         } else {
-            textElem.innerText = "Add to Watchlist";
-            document.getElementById('watchlist-btn').classList.remove('bg-red-600/20', 'border-red-600');
+            if (textElem) textElem.innerText = "Add to Watchlist";
+            if (iconElem) iconElem.innerText = "🤍";
+            if (btnElem) {
+                btnElem.classList.remove('bg-rose-600/20', 'border-rose-500/60', 'text-rose-300');
+                btnElem.classList.add('bg-zinc-900/90');
+            }
         }
     }
 
@@ -141,18 +232,24 @@
 
         localStorage.setItem('streamhub_watchlist', JSON.stringify(list));
         checkWatchlistStatus();
+        if (typeof updateWatchlistCounter === 'function') {
+            updateWatchlistCounter();
+        }
     }
 
     function changeServer(url, btnElement) {
-        document.getElementById('video-player').src = url;
+        const player = document.getElementById('video-player');
+        if (player) {
+            player.src = url;
+        }
 
         document.querySelectorAll('.server-btn').forEach(btn => {
-            btn.classList.remove('bg-red-600', 'text-white');
-            btn.classList.add('bg-zinc-800', 'text-zinc-300');
+            btn.classList.remove('bg-gradient-to-r', 'from-red-600', 'to-rose-600', 'text-white', 'border-rose-500/50', 'shadow-glow-sm');
+            btn.classList.add('glass-pill', 'text-zinc-300');
         });
 
-        btnElement.classList.remove('bg-zinc-800', 'text-zinc-300');
-        btnElement.classList.add('bg-red-600', 'text-white');
+        btnElement.classList.remove('glass-pill', 'text-zinc-300');
+        btnElement.classList.add('bg-gradient-to-r', 'from-red-600', 'to-rose-600', 'text-white', 'border-rose-500/50', 'shadow-glow-sm');
     }
 
     document.addEventListener('DOMContentLoaded', checkWatchlistStatus);
