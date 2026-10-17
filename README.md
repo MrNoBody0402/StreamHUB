@@ -65,3 +65,88 @@ Open your terminal or command prompt and clone the project:
 git clone [https://github.com/MrNoBody0402/StreamHUB.git](https://github.com/MrNoBody0402/StreamHUB.git)
 cd StreamHUB
 ```
+
+---
+
+### 3. Create & Activate a Virtual Environment
+Isolate project dependencies using a virtual environment.
+
+On Windows:
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+On macOS / Linux:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+### 4. Install Dependencies
+Install all required Python packages:
+
+```bash
+pip install django requests
+```
+(Or if using a requirements file:)
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 5. Run Database Migrations
+Set up Django's internal database tables:
+```bash
+python manage.py migrate
+```
+
+### 6. Start the Development Server
+Launch the application locally:
+
+```bash
+python manage.py runserver
+```
+
+Open your web browser and visit:
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+
+
+### 📁 Project Structure
+StreamHUB/
+│
+├── catalog/                          # Core Application
+│   ├── templates/                    # HTML Templates
+│   │   └── catalog/
+│   │       ├── actor.html            # Actor profile & filmography view
+│   │       ├── base.html             # Main layout with header & navigation
+│   │       ├── home.html             # Dashboard with filters & grid layout
+│   │       ├── watch.html            # Embed video player & episode loader
+│   │       └── watchlist.html        # Client-side saved titles page
+│   │
+│   ├── admin.py                      # Admin configuration
+│   ├── apps.py                       # App configuration
+│   ├── models.py                     # Data models
+│   ├── services.py                   # TMDB API functions
+│   ├── tests.py                      # Tests
+│   ├── urls.py                       # Application URL routing
+│   └── views.py                      # View logic & context rendering
+│
+├── screenshots/                      # Preview images for documentation
+│   ├── actor.png.png
+│   ├── home.png.png
+│   ├── watch.png.png
+│   └── watchlist.png.png
+│
+├── streamhub/                        # Django Project Settings
+│   ├── settings.py                   # App configuration & settings
+│   ├── urls.py                       # Root route management
+│   └── wsgi.py
+│
+├── db.sqlite3                        # Database file
+├── manage.py                         # CLI tool for Django
+└── README.md                         # Documentation
