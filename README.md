@@ -117,6 +117,7 @@ Open your web browser and visit:
 
 
 ### 📁 Project Structure
+```
 StreamHUB/
 │
 ├── catalog/                          # Core Application
@@ -150,3 +151,4 @@ StreamHUB/
 ├── db.sqlite3                        # Database file
 ├── manage.py                         # CLI tool for Django
 └── README.md                         # Documentation
+```
