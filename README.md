@@ -26,13 +26,13 @@ StreamHub is a modern, responsive web application for exploring trending movies,
 ![StreamHub Home Showcase](screenshots/home.png.png)
 
 ### 📍 Title Detail & Streaming Player
-![StreamHub Watch Screen]([.screenshots/watch.png](https://github.com/MrNoBody0402/StreamHUB/blob/7f50e3cf16beadc98373a223c5c69bda917d9975/screenshots/watch.png.png))
+![StreamHub Watch Screen](screenshots/actor.png.png)
 
 ### 📍 Actor Profile & Filmography
-![StreamHub Actor Page]([/screenshots/actor.png](https://github.com/MrNoBody0402/StreamHUB/blob/7f50e3cf16beadc98373a223c5c69bda917d9975/screenshots/actor.png.png))
+![StreamHub Actor Page](screenshots/watch.png.png)
 
 ### 📍 Personal Watchlist
-![StreamHub Watchlist Screen]([/screenshots/watchlist.png](https://github.com/MrNoBody0402/StreamHUB/blob/7f50e3cf16beadc98373a223c5c69bda917d9975/screenshots/watchlist.png.png))
+![StreamHub Watchlist Screen](screenshots/watchlist.png.png)
 
 ---
 
