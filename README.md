@@ -22,19 +22,17 @@ StreamHub is a modern, responsive web application for exploring trending movies,
 
 ## 🖼️ Screenshots
 
-> *Note: Place your screenshots inside a folder named `screenshots/` in your repository root.*
-
 ### 📍 Home Dashboard & Content Filter
-![StreamHub Home Showcase](screenshots/home.png)
+![StreamHub Home Showcase](./screenshots/home.png)
 
 ### 📍 Title Detail & Streaming Player
-![StreamHub Watch Screen](screenshots/watch.png)
+![StreamHub Watch Screen](./screenshots/watch.png)
 
 ### 📍 Actor Profile & Filmography
-![StreamHub Actor Page](screenshots/actor.png)
+![StreamHub Actor Page](./screenshots/actor.png)
 
 ### 📍 Personal Watchlist
-![StreamHub Watchlist Screen](screenshots/watchlist.png)
+![StreamHub Watchlist Screen](./screenshots/watchlist.png)
 
 ---
 
