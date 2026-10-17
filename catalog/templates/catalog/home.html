@@ -1,0 +1,241 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+
+<!-- Top Controls: Type Switcher (All / Movies / Series) -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-zinc-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+    <div class="flex items-center gap-2">
+        <span class="text-xs text-zinc-400 font-semibold uppercase tracking-wider mr-2">Filter Content:</span>
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=all" 
+           class="px-4 py-2 rounded-xl text-xs font-bold transition border {% if type_filter == 'all' or not type_filter %}bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/30{% else %}bg-zinc-800/80 text-zinc-400 border-white/5 hover:text-white hover:bg-zinc-700{% endif %}">
+           ✨ All Content
+        </a>
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=movie" 
+           class="px-4 py-2 rounded-xl text-xs font-bold transition border {% if type_filter == 'movie' %}bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/30{% else %}bg-zinc-800/80 text-zinc-400 border-white/5 hover:text-white hover:bg-zinc-700{% endif %}">
+           🎬 Movies Only
+        </a>
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=tv" 
+           class="px-4 py-2 rounded-xl text-xs font-bold transition border {% if type_filter == 'tv' %}bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/30{% else %}bg-zinc-800/80 text-zinc-400 border-white/5 hover:text-white hover:bg-zinc-700{% endif %}">
+           📺 TV Series Only
+        </a>
+    </div>
+
+    {% if selected_genre %}
+    <a href="/" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1 transition">
+        <span>✕ Clear Genre Filter</span>
+    </a>
+    {% endif %}
+</div>
+
+{% if query %}
+    <h2 class="text-2xl font-bold mb-6 text-zinc-100 flex items-center gap-2">
+        <span class="w-1.5 h-6 bg-rose-500 rounded-full"></span>
+        Search Results for <span class="text-rose-400">"{{ query }}"</span>
+    </h2>
+    {% if search_results %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-5 animate-fade-in">
+            {% for item in search_results %}
+                {% if item.poster_path %}
+                <a href="{% url 'watch' item.media_type item.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                        <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    </div>
+                    <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">
+                        {% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}
+                    </p>
+                    <span class="text-[10px] text-zinc-500 capitalize tracking-wider font-medium">{{ item.media_type }}</span>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-zinc-400 text-sm bg-zinc-900/50 p-6 rounded-2xl border border-white/5">No titles found matching your query.</p>
+    {% endif %}
+
+{% elif selected_genre %}
+    <h2 class="text-2xl font-bold mb-6 capitalize text-zinc-100 flex items-center gap-2">
+        <span class="w-1.5 h-6 bg-rose-500 rounded-full"></span>
+        {{ selected_genre }} {% if type_filter == 'movie' %}Movies{% elif type_filter == 'tv' %}TV Shows{% else %}Movies & Shows{% endif %}
+    </h2>
+    
+    {% if movies %}
+    <div class="mb-10">
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-rose-500 pl-3 text-zinc-200">Movies</h3>
+        <div id="movies-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-5">
+            {% for movie in movies %}
+            <a href="{% url 'watch' 'movie' movie.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ movie.title }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if shows %}
+    <div>
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-rose-500 pl-3 text-zinc-200">TV Shows</h3>
+        <div id="shows-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-5">
+            {% for show in shows %}
+            <a href="{% url 'watch' 'tv' show.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ show.name }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Show More & Loading Controls -->
+    <div class="mt-12 text-center flex flex-col items-center justify-center gap-4">
+        <button id="load-more-btn" onclick="loadNextPage()" class="px-8 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-rose-400 font-bold text-xs border border-white/10 shadow-lg hover:border-rose-500/50 transition transform active:scale-95 flex items-center gap-2">
+            <span>Show More Titles</span>
+            <span id="load-spinner" class="hidden w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></span>
+        </button>
+    </div>
+
+{% else %}
+    <!-- Featured Hero Banner -->
+    {% if hero_item %}
+    <div class="relative w-full h-[480px] rounded-3xl overflow-hidden mb-12 border border-white/10 shadow-2xl group">
+        <img src="https://image.tmdb.org/t/p/original{{ hero_item.backdrop_path }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
+        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 to-transparent flex flex-col justify-end p-8 sm:p-12">
+            <span class="text-rose-400 font-extrabold text-xs mb-2 uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span> Featured Title
+            </span>
+            <h1 class="text-4xl sm:text-5xl font-black mb-3 text-white tracking-tight leading-tight">
+                {% if hero_item.title %}{{ hero_item.title }}{% else %}{{ hero_item.name }}{% endif %}
+            </h1>
+            <p class="text-zinc-300 max-w-2xl text-xs sm:text-sm mb-6 line-clamp-3 leading-relaxed font-normal">{{ hero_item.overview }}</p>
+            <div>
+                <a href="{% url 'watch' hero_type hero_item.id %}" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold px-7 py-3.5 rounded-2xl transition transform active:scale-95 shadow-xl shadow-rose-600/30 text-xs uppercase tracking-wider">
+                    <span>▶ Watch Now</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Movies Section -->
+    {% if trending_movies or popular_movies %}
+    <div class="mb-12">
+        <h2 class="text-xl font-bold mb-5 border-l-4 border-rose-500 pl-3 text-zinc-100">
+            Trending & Popular Movies
+        </h2>
+        <div id="movies-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-5">
+            {% for movie in trending_movies %}
+            <a href="{% url 'watch' 'movie' movie.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ movie.title }}</p>
+            </a>
+            {% endfor %}
+            {% for movie in popular_movies %}
+            <a href="{% url 'watch' 'movie' movie.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ movie.title }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- TV Shows Section -->
+    {% if trending_shows or popular_shows %}
+    <div class="mb-12">
+        <h2 class="text-xl font-bold mb-5 border-l-4 border-rose-500 pl-3 text-zinc-100">
+            Popular TV Series
+        </h2>
+        <div id="shows-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-5">
+            {% for show in trending_shows %}
+            <a href="{% url 'watch' 'tv' show.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ show.name }}</p>
+            </a>
+            {% endfor %}
+            {% for show in popular_shows %}
+            <a href="{% url 'watch' 'tv' show.id %}" class="group transition transform hover:-translate-y-2 duration-300">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-xl group-hover:shadow-rose-600/20">
+                    <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" class="w-full h-auto object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                </div>
+                <p class="mt-2.5 font-semibold text-xs text-zinc-200 group-hover:text-rose-400 truncate transition">{{ show.name }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Show More & Continuous Scroll Trigger -->
+    <div class="mt-12 mb-8 text-center flex flex-col items-center justify-center gap-4">
+        <button id="load-more-btn" onclick="loadNextPage()" class="px-8 py-3.5 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 text-rose-400 font-bold text-xs border border-white/10 shadow-xl hover:border-rose-500/50 transition transform active:scale-95 flex items-center gap-2">
+            <span>Show More Titles</span>
+            <span id="load-spinner" class="hidden w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></span>
+        </button>
+    </div>
+{% endif %}
+
+<!-- Continuous Scroll Script -->
+<script>
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMorePages = true;
+
+    async function loadNextPage() {
+        if (isLoading || !hasMorePages) return;
+
+        isLoading = true;
+        const spinner = document.getElementById('load-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+
+        currentPage += 1;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', currentPage);
+
+        try {
+            const response = await fetch(`/?${urlParams.toString()}`);
+            const html = await response.text();
+            
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            const newMovies = doc.querySelectorAll('#movies-grid > a');
+            const newShows = doc.querySelectorAll('#shows-grid > a');
+
+            if (newMovies.length === 0 && newShows.length === 0) {
+                hasMorePages = false;
+                const loadBtn = document.getElementById('load-more-btn');
+                if (loadBtn) loadBtn.innerText = "No More Titles Available";
+            } else {
+                const moviesGrid = document.getElementById('movies-grid');
+                const showsGrid = document.getElementById('shows-grid');
+
+                if (moviesGrid) newMovies.forEach(item => moviesGrid.appendChild(item));
+                if (showsGrid) newShows.forEach(item => showsGrid.appendChild(item));
+            }
+        } catch (error) {
+            console.error("Error loading next page:", error);
+        } finally {
+            isLoading = false;
+            if (spinner) spinner.classList.add('hidden');
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+            loadNextPage();
+        }
+    });
+</script>
+
+{% endblock %}
