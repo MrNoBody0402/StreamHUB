@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamHUB — Brand Logo Identity Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 950: '#07080c', 900: '#0d0f15', 850: '#121520', 800: '#171b28' },
+            brand: { rose: '#f43f5e', amber: '#f59e0b', red: '#e11d48' }
+          },
+          fontFamily: {
+            display: ['"Outfit"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glow-rose {
+      filter: drop-shadow(0 0 24px rgba(244, 63, 94, 0.45));
+    }
+  </style>
+</head>
+<body class="bg-[#07080c] text-zinc-100 min-h-screen font-sans antialiased selection:bg-rose-500 selection:text-white p-6 md:p-12 relative overflow-x-hidden">
+
+  <!-- Ambient Cinematic Background Glows -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-rose-600/15 blur-[160px] pointer-events-none -z-10 rounded-full"></div>
+  <div class="fixed bottom-0 right-10 w-[450px] h-[450px] bg-amber-500/10 blur-[180px] pointer-events-none -z-10 rounded-full"></div>
+
+  <div class="max-w-6xl mx-auto space-y-12">
+    
+    <!-- Header -->
+    <header class="border-b border-zinc-800/80 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold tracking-wider uppercase mb-3">
+          🎬 Official Project Brand Identity
+        </div>
+        <h1 class="text-3xl md:text-5xl font-black font-display tracking-tight text-white">
+          Stream<span class="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">HUB</span> Brand Kit
+        </h1>
+        <p class="text-zinc-400 mt-2 text-sm md:text-base">Custom tailored for <span class="text-zinc-200 font-medium">streamhub_project</span> with dark-mode glassmorphic styling.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="logo.svg" download class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold border border-zinc-700/60 transition">Download Logo SVG</a>
+        <a href="logo-icon.svg" download class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 hover:opacity-90 text-xs font-semibold text-white shadow-lg transition">Download App Icon</a>
+      </div>
+    </header>
+
+    <!-- Showcase Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- 1. Full Horizontal Brandmark -->
+      <div class="bg-[#121520]/80 border border-zinc-800/90 rounded-3xl p-8 backdrop-blur-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Concept 01 &bull; Full Brandmark</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Vector SVG</span>
+          </div>
+          <h3 class="text-xl font-bold font-display text-white mb-2">Primary Header & Marketing Logo</h3>
+          <p class="text-xs text-zinc-400 mb-6">Designed for wide screen headers, navbar branding, social media banners, and hero sections.</p>
+        </div>
+
+        <div class="py-10 px-6 rounded-2xl bg-[#090a0f] border border-zinc-800/80 flex items-center justify-center glow-rose">
+          <img src="logo.svg" alt="StreamHUB Full Logo" class="max-w-full h-auto w-[420px]">
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+          <span>File: <code class="text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded">catalog/static/catalog/logo.svg</code></span>
+          <span class="text-zinc-500">Vector Scalable</span>
+        </div>
+      </div>
+
+      <!-- 2. Square App Icon / Emblem -->
+      <div class="bg-[#121520]/80 border border-zinc-800/90 rounded-3xl p-8 backdrop-blur-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Concept 02 &bull; App Icon & Emblem</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">Squircle / PWA</span>
+          </div>
+          <h3 class="text-xl font-bold font-display text-white mb-2">App Icon, Mobile Launcher & Favicon</h3>
+          <p class="text-xs text-zinc-400 mb-6">High impact kinetic 'S' wave combined with a cinematic play triangle and glowing nexus nodes.</p>
+        </div>
+
+        <div class="py-10 px-6 rounded-2xl bg-[#090a0f] border border-zinc-800/80 flex items-center justify-center">
+          <img src="logo-icon.svg" alt="StreamHUB App Icon" class="w-48 h-48 drop-shadow-2xl">
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+          <span>File: <code class="text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">catalog/static/catalog/logo-icon.svg</code></span>
+          <span class="text-zinc-500">512 &times; 512 Square</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Live Website Navbar Simulation -->
+    <div class="bg-[#121520]/80 border border-zinc-800/90 rounded-3xl p-8 backdrop-blur-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-xl font-bold font-display text-white">Live Navbar Integration Simulation</h3>
+          <p class="text-xs text-zinc-400 mt-1">Here is how the new logo looks when rendered right inside your StreamHUB website navbar:</p>
+        </div>
+        <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">base.html Match</span>
+      </div>
+
+      <div class="mt-6 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl bg-[#07080c]">
+        <!-- Simulated Navbar -->
+        <div class="bg-[#0c0e15]/90 backdrop-blur-xl border-b border-zinc-800/80 px-6 py-4 flex items-center justify-between">
+          
+          <!-- Brand Logo in Nav -->
+          <div class="flex items-center gap-6">
+            <a href="#" class="flex items-center gap-3">
+              <img src="logo-icon.svg" class="w-10 h-10 rounded-xl" alt="Icon">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-display font-black text-2xl tracking-wider text-white">
+                    STREAM<span class="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">HUB</span>
+                  </span>
+                  <span class="px-1.5 py-0.5 text-[9px] font-extrabold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-md">HD</span>
+                </div>
+              </div>
+            </a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-zinc-400">
+              <span class="px-3 py-1.5 rounded-full bg-white/5 text-zinc-200">💥 Action</span>
+              <span class="px-3 py-1.5 rounded-full hover:bg-white/5">😂 Comedy</span>
+              <span class="px-3 py-1.5 rounded-full hover:bg-white/5">🚀 Sci-Fi</span>
+            </div>
+          </div>
+
+          <!-- Search & Profile -->
+          <div class="flex items-center gap-3">
+            <div class="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 flex items-center gap-2">
+              <svg class="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <span>Search movies, actors...</span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center font-bold text-xs text-white">D</div>
+          </div>
+        </div>
+
+        <!-- Simulated Body Mockup -->
+        <div class="p-8 text-center bg-gradient-to-b from-[#0c0e15] to-[#07080c]">
+          <span class="text-xs font-semibold text-rose-400 uppercase tracking-widest">Featured Premiere</span>
+          <h2 class="text-2xl md:text-4xl font-black font-display text-white mt-1">Unlimited 4K Streaming Platform</h2>
+          <p class="text-zinc-400 text-xs md:text-sm mt-2 max-w-lg mx-auto">Watch trending blockbusters, top TV series, and cinema classics with real-time watchlist syncing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color Palette Specs -->
+    <div class="border-t border-zinc-800/80 pt-8">
+      <h4 class="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-4">Official Brand Color System</h4>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div class="p-4 rounded-xl bg-[#07080c] border border-zinc-800">
+          <div class="w-full h-8 rounded-lg bg-[#07080c] border border-zinc-700 mb-2"></div>
+          <div class="text-xs font-bold text-white">Dark Obsidian</div>
+          <div class="text-[11px] text-zinc-500 font-mono">#07080C</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121520] border border-zinc-800">
+          <div class="w-full h-8 rounded-lg bg-[#121520] mb-2"></div>
+          <div class="text-xs font-bold text-white">Midnight Glass</div>
+          <div class="text-[11px] text-zinc-500 font-mono">#121520</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121520] border border-zinc-800">
+          <div class="w-full h-8 rounded-lg bg-[#f43f5e] mb-2"></div>
+          <div class="text-xs font-bold text-white">Stream Rose</div>
+          <div class="text-[11px] text-zinc-500 font-mono">#F43F5E</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121520] border border-zinc-800">
+          <div class="w-full h-8 rounded-lg bg-[#e11d48] mb-2"></div>
+          <div class="text-xs font-bold text-white">Crimson Core</div>
+          <div class="text-[11px] text-zinc-500 font-mono">#E11D48</div>
+        </div>
+        <div class="p-4 rounded-xl bg-[#121520] border border-zinc-800">
+          <div class="w-full h-8 rounded-lg bg-[#f59e0b] mb-2"></div>
+          <div class="text-xs font-bold text-white">Solar Amber</div>
+          <div class="text-[11px] text-zinc-500 font-mono">#F59E0B</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

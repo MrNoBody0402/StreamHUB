@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="65%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#1e1328"/>
+      <stop offset="70%" stop-color="#0c0e17"/>
+      <stop offset="100%" stop-color="#07080c"/>
+    </radialGradient>
+
+    <!-- Core Brand Gradient (Rose-Red to Warm Amber) -->
+    <linearGradient id="streamGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185"/>
+      <stop offset="35%" stop-color="#f43f5e"/>
+      <stop offset="70%" stop-color="#e11d48"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+
+    <!-- Secondary Wave Gradient -->
+    <linearGradient id="waveGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#e11d48" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.4"/>
+    </linearGradient>
+
+    <!-- Inner Play Shadow & Highlight -->
+    <linearGradient id="playHighlight" x1="20%" y1="10%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#ffe4e6" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" result="blur1"/>
+      <feGaussianBlur stdDeviation="28" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle Drop Shadow -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle App Icon Base -->
+  <rect x="24" y="24" width="464" height="464" rx="116" ry="116" fill="url(#bgGlow)" stroke="#222738" stroke-width="3" filter="url(#softShadow)"/>
+  
+  <!-- Outer Ambient Hue Halo -->
+  <circle cx="256" cy="256" r="170" fill="url(#streamGrad)" opacity="0.12" filter="blur(30px)"/>
+
+  <!-- Dynamic Streaming Waves (Echoing Signal / Stream Nexus) -->
+  <g filter="url(#softShadow)">
+    <!-- Back Orbit Wave Arc -->
+    <path d="M 170 120 C 260 70, 390 100, 410 200 C 425 280, 370 380, 290 410" 
+          fill="none" 
+          stroke="url(#waveGrad)" 
+          stroke-width="16" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 10" 
+          opacity="0.65"/>
+
+    <!-- Concentric Streaming Arc -->
+    <path d="M 125 180 C 100 240, 110 320, 160 380 C 210 440, 310 450, 370 420" 
+          fill="none" 
+          stroke="url(#streamGrad)" 
+          stroke-width="20" 
+          stroke-linecap="round" 
+          opacity="0.9"/>
+  </g>
+
+  <!-- Central Kinetic 'S' & Stream Play Fusion -->
+  <!-- Outer Sleek Ribbon Loop -->
+  <path d="M 210 140 
+           C 310 120, 380 180, 360 250 
+           C 345 300, 290 320, 240 335 
+           L 190 350 
+           C 140 365, 120 400, 150 425 
+           C 185 450, 260 440, 310 400"
+        fill="none" 
+        stroke="url(#streamGrad)" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        filter="url(#neonGlow)"/>
+
+  <!-- Center Solid Play Wedge Symbol (The Cinema Action) -->
+  <g filter="url(#softShadow)">
+    <polygon points="225,185 345,256 225,327" 
+             fill="url(#streamGrad)" 
+             filter="url(#neonGlow)"/>
+    <polygon points="230,196 333,256 230,316" 
+             fill="url(#playHighlight)" 
+             opacity="0.9"/>
+  </g>
+
+  <!-- Futuristic Hub Node Dots -->
+  <circle cx="360" cy="250" r="9" fill="#f59e0b" filter="url(#neonGlow)"/>
+  <circle cx="210" cy="140" r="10" fill="#fb7185" filter="url(#neonGlow)"/>
+  <circle cx="310" cy="400" r="8" fill="#f43f5e" filter="url(#neonGlow)"/>
+</svg>

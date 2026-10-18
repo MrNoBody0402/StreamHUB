@@ -1,4 +1,5 @@
 {% extends 'catalog/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -206,8 +207,8 @@
         <div class="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col items-start max-w-3xl">
             
             <div class="flex flex-wrap items-center gap-2.5 mb-3">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-rose-600/90 text-white shadow-glow-sm flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> FEATURED PREMIERE
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-glow-sm flex items-center gap-1.5 border border-white/15">
+                    <img src="{% static 'catalog/logo-icon.svg' %}" class="w-3.5 h-3.5 rounded" alt="StreamHUB"> STREAMHUB PREMIERE
                 </span>
                 {% if hero_item.vote_average %}
                 <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 shadow-sm flex items-center gap-1">
