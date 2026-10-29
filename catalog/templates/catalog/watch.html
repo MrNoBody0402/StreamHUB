@@ -99,6 +99,32 @@
         {% endif %}
     </div>
 
+    {% if cast %}
+    <section aria-labelledby="cast-heading" class="mb-8">
+        <h2 id="cast-heading" class="text-xl font-display font-bold text-white mb-5 flex items-center gap-2.5">
+            <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
+            Cast & Characters
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {% for actor in cast %}
+            <a href="{% url 'actor_detail' actor.id %}" class="group glass-card p-3.5 rounded-2xl border border-white/5 hover:border-rose-500/50 hover:shadow-glow-sm transition duration-300 text-center flex flex-col items-center">
+                {% if actor.profile_path %}
+                <div class="w-20 h-20 rounded-full overflow-hidden mb-3 border border-white/10 group-hover:scale-105 group-hover:border-rose-500/50 transition duration-300 shadow-md">
+                    <img src="https://image.tmdb.org/t/p/w185{{ actor.profile_path }}" alt="{{ actor.name }}" class="w-full h-full object-cover" loading="lazy">
+                </div>
+                {% else %}
+                <div class="w-20 h-20 bg-zinc-800/90 rounded-full mb-3 flex items-center justify-center text-[10px] text-zinc-500 border border-white/10">
+                    No Photo
+                </div>
+                {% endif %}
+                <p class="font-bold text-xs text-zinc-100 group-hover:text-rose-400 transition truncate w-full">{{ actor.name }}</p>
+                <p class="text-[10px] text-zinc-400 truncate w-full mt-0.5">{{ actor.character }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     <!-- Streaming Notice / Pro-Tip -->
     <div class="flex items-center gap-2 text-[11px] text-zinc-400 px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5 mb-8">
         <span class="text-rose-400 font-bold">💡 Pro-Tip:</span>
@@ -159,41 +185,44 @@
         </p>
     </div>
 
-    <!-- Cast Members Section -->
-    {% if cast %}
-    <div class="mb-10">
-        <h2 class="text-xl font-display font-bold text-white mb-5 flex items-center gap-2.5">
-            <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
-            Top Cast & Characters
-        </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {% for actor in cast %}
-            <a href="{% url 'actor_detail' actor.id %}" class="group glass-card p-3.5 rounded-2xl border border-white/5 hover:border-rose-500/50 hover:shadow-glow-sm transition duration-300 text-center flex flex-col items-center">
-                {% if actor.profile_path %}
-                <div class="w-20 h-20 rounded-full overflow-hidden mb-3 border border-white/10 group-hover:scale-105 group-hover:border-rose-500/50 transition duration-300 shadow-md">
-                    <img src="https://image.tmdb.org/t/p/w185{{ actor.profile_path }}" alt="{{ actor.name }}" class="w-full h-full object-cover">
+    <section aria-labelledby="recommendations-heading" class="mb-10">
+        <div class="mb-5">
+            <h2 id="recommendations-heading" class="text-xl font-display font-bold text-white flex items-center gap-2.5">
+                <span class="w-1.5 h-5 bg-rose-500 rounded-full shadow-glow-sm"></span>
+                More like {% if details.title %}{{ details.title }}{% else %}{{ details.name }}{% endif %}
+            </h2>
+            <p class="mt-1.5 ml-4 text-xs text-zinc-400">Suggestions based on this {% if media_type == 'tv' %}series{% else %}movie{% endif %}.</p>
+        </div>
+        <div id="recommendations-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {% for item in recommendations %}
+            {% if item.poster_path %}
+            <a href="{% url 'watch' media_type item.id %}" class="group relative flex flex-col transition duration-300 hover:-translate-y-1">
+                <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/50 transition">
+                    <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}" alt="{% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    {% if item.vote_average %}
+                    <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/70 text-amber-300 border border-white/10">
+                        ⭐ {{ item.vote_average|floatformat:1 }}
+                    </span>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="w-20 h-20 bg-zinc-800/90 rounded-full mb-3 flex items-center justify-center text-[10px] text-zinc-500 border border-white/10">
-                    No Photo
-                </div>
-                {% endif %}
-                <p class="font-bold text-xs text-zinc-100 group-hover:text-rose-400 transition truncate w-full">{{ actor.name }}</p>
-                <p class="text-[10px] text-zinc-400 truncate w-full mt-0.5">{{ actor.character }}</p>
+                <p class="mt-2.5 font-bold text-xs sm:text-sm text-zinc-100 group-hover:text-rose-400 truncate">{% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}</p>
+                <span class="text-[10px] text-zinc-400 mt-0.5">{% if item.release_date %}{{ item.release_date|slice:":4" }}{% elif item.first_air_date %}{{ item.first_air_date|slice:":4" }}{% endif %}</span>
             </a>
+            {% endif %}
+            {% empty %}
+            <p class="col-span-full text-sm text-zinc-400">{% if recommendations_error %}Suggestions could not be loaded. Please refresh to try again.{% else %}No related titles are available right now.{% endif %}</p>
             {% endfor %}
         </div>
-    </div>
-    {% endif %}
+        <div id="recommendations-sentinel" class="mt-6 flex flex-col items-center gap-2 text-xs text-zinc-400" {% if not recommendations_has_more %}hidden{% endif %}>
+            <span id="recommendations-status" aria-live="polite">Scroll for more suggestions.</span>
+            <button id="recommendations-retry" type="button" class="hidden px-4 py-2 rounded-lg border border-white/10 text-zinc-300 hover:text-white hover:bg-white/5">Try again</button>
+        </div>
+    </section>
 </div>
 
+{{ continue_watching_item|json_script:"continue-watching-item" }}
 <script>
-    const currentItem = {
-        id: "{{ details.id }}",
-        title: "{% if details.title %}{{ details.title }}{% else %}{{ details.name }}{% endif %}",
-        poster: "{{ details.poster_path }}",
-        media_type: "{{ media_type }}"
-    };
+    const currentItem = JSON.parse(document.getElementById('continue-watching-item').textContent);
 
     function checkWatchlistStatus() {
         const list = JSON.parse(localStorage.getItem('streamhub_watchlist') || '[]');
@@ -252,6 +281,114 @@
         btnElement.classList.add('bg-gradient-to-r', 'from-red-600', 'to-rose-600', 'text-white', 'border-rose-500/50', 'shadow-glow-sm');
     }
 
-    document.addEventListener('DOMContentLoaded', checkWatchlistStatus);
+    function saveContinueWatchingItem() {
+        const key = 'streamhub_continue_watching';
+        const list = JSON.parse(localStorage.getItem(key) || '[]');
+        const item = {
+            ...currentItem,
+            watched_at: Date.now(),
+        };
+        const updatedList = list.filter(savedItem =>
+            savedItem.id.toString() !== item.id.toString() || savedItem.media_type !== item.media_type
+        );
+        updatedList.unshift(item);
+        localStorage.setItem(key, JSON.stringify(updatedList.slice(0, 20)));
+    }
+
+    const recommendationsEndpoint = "{% url 'media_recommendations_api' media_type tmdb_id %}";
+    let recommendationPage = 1;
+    let isLoadingRecommendations = false;
+    let hasMoreRecommendations = {{ recommendations_has_more|yesno:"true,false" }};
+
+    function appendRecommendation(item) {
+        if (!item.poster_path || !item.id) return;
+
+        const link = document.createElement('a');
+        link.href = `/watch/${encodeURIComponent(item.media_type)}/${encodeURIComponent(item.id)}/`;
+        link.className = 'group relative flex flex-col transition duration-300 hover:-translate-y-1';
+
+        const poster = document.createElement('div');
+        poster.className = 'relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/50 transition';
+
+        const image = document.createElement('img');
+        image.src = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
+        image.alt = item.title;
+        image.loading = 'lazy';
+        image.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500';
+        poster.appendChild(image);
+
+        if (item.vote_average) {
+            const rating = document.createElement('span');
+            rating.className = 'absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/70 text-amber-300 border border-white/10';
+            rating.textContent = `⭐ ${Number(item.vote_average).toFixed(1)}`;
+            poster.appendChild(rating);
+        }
+
+        const title = document.createElement('p');
+        title.className = 'mt-2.5 font-bold text-xs sm:text-sm text-zinc-100 group-hover:text-rose-400 truncate';
+        title.textContent = item.title;
+
+        const year = document.createElement('span');
+        year.className = 'text-[10px] text-zinc-400 mt-0.5';
+        year.textContent = (item.release_date || '').slice(0, 4);
+
+        link.append(poster, title, year);
+        document.getElementById('recommendations-grid').appendChild(link);
+    }
+
+    async function loadMoreRecommendations() {
+        if (isLoadingRecommendations || !hasMoreRecommendations) return;
+
+        isLoadingRecommendations = true;
+        const status = document.getElementById('recommendations-status');
+        const retryButton = document.getElementById('recommendations-retry');
+        retryButton.classList.add('hidden');
+        status.textContent = 'Loading suggestions...';
+
+        try {
+            const response = await fetch(`${recommendationsEndpoint}?page=${recommendationPage + 1}`);
+            if (!response.ok) throw new Error(`Recommendations request failed (${response.status}).`);
+
+            const data = await response.json();
+            if (!Array.isArray(data.results)) throw new Error('Recommendations response was invalid.');
+
+            data.results.forEach(appendRecommendation);
+            recommendationPage += 1;
+            hasMoreRecommendations = data.has_more;
+
+            if (hasMoreRecommendations) {
+                status.textContent = 'Scroll for more suggestions.';
+            } else {
+                status.textContent = 'You have reached the end of the suggestions.';
+                document.getElementById('recommendations-sentinel').hidden = true;
+            }
+        } catch (error) {
+            console.error('Could not load recommendations:', error);
+            status.textContent = 'Could not load more suggestions.';
+            retryButton.textContent = 'Try again';
+            retryButton.classList.remove('hidden');
+        } finally {
+            isLoadingRecommendations = false;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        checkWatchlistStatus();
+        saveContinueWatchingItem();
+
+        const sentinel = document.getElementById('recommendations-sentinel');
+        const retryButton = document.getElementById('recommendations-retry');
+        retryButton.addEventListener('click', loadMoreRecommendations);
+
+        if (hasMoreRecommendations && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(entries => {
+                if (entries.some(entry => entry.isIntersecting)) loadMoreRecommendations();
+            }, { rootMargin: '300px' });
+            observer.observe(sentinel);
+        } else if (hasMoreRecommendations) {
+            retryButton.textContent = 'Load more suggestions';
+            retryButton.classList.remove('hidden');
+        }
+    });
 </script>
 {% endblock %}

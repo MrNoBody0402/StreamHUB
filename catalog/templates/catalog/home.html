@@ -3,38 +3,6 @@
 
 {% block content %}
 
-<!-- Top Controls: Type Switcher & Active Genre Badge -->
-<div class="flex flex-wrap items-center justify-between gap-4 mb-8 glass-card p-3 sm:p-4 rounded-2xl shadow-glass">
-    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mr-1 sm:mr-2 hidden sm:inline">Browse:</span>
-        
-        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=all" 
-           class="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition duration-200 border flex items-center gap-1.5 {% if type_filter == 'all' or not type_filter %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:border-white/20{% endif %}">
-           <span>✨</span> <span>All Content</span>
-        </a>
-
-        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=movie" 
-           class="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition duration-200 border flex items-center gap-1.5 {% if type_filter == 'movie' %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:border-white/20{% endif %}">
-           <span>🎬</span> <span>Movies</span>
-        </a>
-
-        <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_genre %}genre={{ selected_genre }}&{% endif %}type=tv" 
-           class="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition duration-200 border flex items-center gap-1.5 {% if type_filter == 'tv' %}bg-gradient-to-r from-red-600 to-rose-600 text-white border-rose-500/50 shadow-glow-sm{% else %}glass-pill text-zinc-300 hover:text-white hover:border-white/20{% endif %}">
-           <span>📺</span> <span>TV Series</span>
-        </a>
-    </div>
-
-    {% if selected_genre %}
-    <div class="flex items-center gap-2">
-        <span class="text-xs text-zinc-400">Genre Filter:</span>
-        <a href="/?{% if type_filter %}type={{ type_filter }}{% endif %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-600/20 text-rose-300 border border-rose-500/30 hover:bg-rose-600/30 transition">
-            <span class="capitalize">{{ selected_genre }}</span>
-            <span class="w-4 h-4 rounded-full bg-rose-500/30 flex items-center justify-center text-[10px]">✕</span>
-        </a>
-    </div>
-    {% endif %}
-</div>
-
 {% if query %}
     <!-- Search Results Mode -->
     <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
@@ -196,30 +164,38 @@
     </div>
 
 {% else %}
+    <section id="continue-watching-section" aria-labelledby="continue-watching-heading" class="hidden mb-12">
+        <div class="mb-5">
+            <h2 id="continue-watching-heading" class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
+                <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
+                Continue watching
+            </h2>
+            <p class="mt-1.5 ml-4 text-xs text-zinc-400">Pick up where you left off.</p>
+        </div>
+        <div id="continue-watching-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6"></div>
+    </section>
+
     <!-- Default Showcase View: Featured Hero Banner -->
     {% if hero_item %}
-    <div class="relative w-full min-h-[460px] sm:h-[520px] rounded-3xl overflow-hidden mb-12 border border-white/10 shadow-2xl group flex flex-col justify-end">
+    <section aria-labelledby="featured-title" class="relative w-full min-h-[400px] sm:h-[440px] rounded-2xl overflow-hidden mb-12 border border-white/10 shadow-xl group flex flex-col justify-end">
         <img src="https://image.tmdb.org/t/p/original{{ hero_item.backdrop_path }}" alt="{% if hero_item.title %}{{ hero_item.title }}{% else %}{{ hero_item.name }}{% endif %}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out">
         
         <div class="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/65 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#07080c]/90 via-[#07080c]/40 to-transparent"></div>
 
-        <div class="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col items-start max-w-3xl">
-            <div class="flex flex-wrap items-center gap-2.5 mb-3">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-glow-sm flex items-center gap-1.5 border border-white/15">
-                    <img src="{% static 'catalog/logo-icon.svg' %}" class="w-3.5 h-3.5 rounded" alt="StreamHUB"> STREAMHUB PREMIERE
+        <div class="relative z-10 p-6 sm:p-9 lg:p-11 flex flex-col items-start max-w-3xl">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-600/90 text-white border border-white/15">
+                    Featured {% if hero_type == 'tv' %}series{% else %}movie{% endif %}
                 </span>
                 {% if hero_item.vote_average %}
-                <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 shadow-sm flex items-center gap-1">
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10">
                     ⭐ {{ hero_item.vote_average|floatformat:1 }}/10
                 </span>
                 {% endif %}
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-white/10 backdrop-blur-md text-zinc-300 border border-white/10">
-                    4K ULTRA HD
-                </span>
             </div>
 
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-black mb-3 text-white tracking-tight leading-tight drop-shadow-md">
+            <h1 id="featured-title" class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold mb-3 text-white tracking-tight leading-tight drop-shadow-md">
                 {% if hero_item.title %}{{ hero_item.title }}{% else %}{{ hero_item.name }}{% endif %}
             </h1>
 
@@ -234,17 +210,20 @@
                 </a>
             </div>
         </div>
-    </div>
+    </section>
     {% endif %}
 
     <!-- Trending & Popular Movies Section -->
     {% if trending_movies or popular_movies %}
     <div class="mb-12">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
-                <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
-                Trending & Popular Movies
-            </h2>
+            <div>
+                <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
+                    <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
+                    Popular movies
+                </h2>
+                <p class="mt-1.5 ml-4 text-xs text-zinc-400">Trending picks and popular titles.</p>
+            </div>
         </div>
 
         <div id="movies-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
@@ -312,10 +291,13 @@
     {% if trending_shows or popular_shows %}
     <div class="mb-12">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
-                <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
-                Popular TV Series
-            </h2>
+            <div>
+                <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
+                    <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
+                    TV series
+                </h2>
+                <p class="mt-1.5 ml-4 text-xs text-zinc-400">Trending and popular shows to explore.</p>
+            </div>
         </div>
 
         <div id="shows-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
@@ -388,6 +370,121 @@
 {% endif %}
 
 <script>
+    function renderContinueWatching() {
+        const section = document.getElementById('continue-watching-section');
+        const grid = document.getElementById('continue-watching-grid');
+        if (!section || !grid) return;
+
+        let items;
+        try {
+            const savedItems = JSON.parse(localStorage.getItem('streamhub_continue_watching') || '[]');
+            items = Array.isArray(savedItems) ? savedItems : [];
+        } catch (error) {
+            console.error('Could not read continue-watching history:', error);
+            return;
+        }
+
+        const validItems = items.filter(item =>
+            item && (item.media_type === 'movie' || item.media_type === 'tv') &&
+            (typeof item.id === 'number' || typeof item.id === 'string') &&
+            typeof item.title === 'string'
+        ).slice(0, 6);
+
+        grid.replaceChildren();
+        if (!validItems.length) {
+            section.classList.add('hidden');
+            return;
+        }
+
+        validItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'group relative flex flex-col transition duration-300 hover:-translate-y-1';
+
+            const link = document.createElement('a');
+            const params = new URLSearchParams();
+            if (item.media_type === 'tv' && Number.isInteger(item.season) && Number.isInteger(item.episode)) {
+                params.set('season', item.season);
+                params.set('episode', item.episode);
+            }
+            const queryString = params.toString();
+            link.href = `/watch/${item.media_type}/${encodeURIComponent(item.id)}/${queryString ? `?${queryString}` : ''}`;
+            link.className = 'block';
+
+            const poster = document.createElement('div');
+            poster.className = 'relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/50 transition';
+
+            if (typeof item.poster_path === 'string' && item.poster_path.startsWith('/')) {
+                const image = document.createElement('img');
+                image.src = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
+                image.alt = item.title;
+                image.loading = 'lazy';
+                image.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500';
+                poster.appendChild(image);
+            } else {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'w-full h-full flex items-center justify-center bg-zinc-900 text-xs text-zinc-500';
+                placeholder.textContent = 'No poster';
+                poster.appendChild(placeholder);
+            }
+
+            const type = document.createElement('span');
+            type.className = 'absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-black/70 text-rose-300 border border-white/10';
+            type.textContent = item.media_type === 'tv' ? 'TV Series' : 'Movie';
+            poster.appendChild(type);
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-black/75 border border-white/15 text-white hover:bg-rose-600 hover:border-rose-400 flex items-center justify-center transition';
+            removeButton.setAttribute('aria-label', `Remove ${item.title} from Continue Watching`);
+            removeButton.title = 'Remove from Continue Watching';
+            removeButton.textContent = '×';
+            removeButton.addEventListener('click', () => removeFromContinueWatching(item.id, item.media_type));
+
+            const play = document.createElement('div');
+            play.className = 'absolute inset-0 pointer-events-none bg-gradient-to-t from-black/75 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity';
+            const playIcon = document.createElement('span');
+            playIcon.className = 'w-11 h-11 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-sm';
+            playIcon.setAttribute('aria-hidden', 'true');
+            playIcon.textContent = '▶';
+            play.appendChild(playIcon);
+            poster.appendChild(play);
+            link.appendChild(poster);
+
+            const title = document.createElement('p');
+            title.className = 'mt-2.5 font-bold text-xs sm:text-sm text-zinc-100 group-hover:text-rose-400 truncate';
+            title.textContent = item.title;
+            link.appendChild(title);
+
+            const detail = document.createElement('span');
+            detail.className = 'text-[10px] text-zinc-400 mt-0.5';
+            detail.textContent = item.media_type === 'tv' && Number.isInteger(item.season) && Number.isInteger(item.episode)
+                ? `Season ${item.season} · Episode ${item.episode}`
+                : item.media_type === 'tv' ? 'TV Series' : 'Movie';
+            link.appendChild(detail);
+            card.append(link, removeButton);
+            grid.appendChild(card);
+        });
+
+        section.classList.toggle('hidden', validItems.length === 0);
+    }
+
+    function removeFromContinueWatching(id, mediaType) {
+        try {
+            const list = JSON.parse(localStorage.getItem('streamhub_continue_watching') || '[]');
+            if (!Array.isArray(list)) throw new TypeError('Continue-watching history must be a list.');
+
+            const updatedList = list.filter(item =>
+                item.id.toString() !== id.toString() || item.media_type !== mediaType
+            );
+            localStorage.setItem('streamhub_continue_watching', JSON.stringify(updatedList));
+        } catch (error) {
+            console.error('Could not update continue-watching history:', error);
+            return;
+        }
+
+        renderContinueWatching();
+    }
+
     let currentPage = 1;
     let isLoading = false;
     let hasMorePages = true;
@@ -438,6 +535,7 @@
             loadNextPage();
         }
     });
+    document.addEventListener('DOMContentLoaded', renderContinueWatching);
 </script>
 
 {% endblock %}

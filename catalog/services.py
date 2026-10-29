@@ -60,6 +60,22 @@ def get_media_credits(media_type, tmdb_id):
         print(f"Error fetching credits for {media_type} {tmdb_id}: {e}")
     return []
 
+def get_media_recommendations(media_type, tmdb_id, page=1):
+    """Fetch a page of TMDB recommendations for a movie or TV show."""
+    url = f"{BASE_URL}/{media_type}/{tmdb_id}/recommendations?page={page}"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            return {
+                'results': data.get('results', []),
+                'total_pages': data.get('total_pages', 0),
+            }
+        print(f"TMDB returned {response.status_code} for recommendations for {media_type} {tmdb_id}")
+    except (requests.RequestException, ValueError) as e:
+        print(f"Error fetching recommendations for {media_type} {tmdb_id}: {e}")
+    return None
+
 def get_person_details(person_id):
     """Fetch details and filmography for a specific actor."""
     person_url = f"{BASE_URL}/person/{person_id}"

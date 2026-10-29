@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .services import (
     get_media_list, get_media_details, get_media_credits, 
-    get_person_details, search_media, GENRES
+    get_media_recommendations, get_person_details, search_media, GENRES
 )
 
 def home(request):
@@ -85,6 +85,7 @@ def home(request):
 def watch(request, media_type, tmdb_id):
     details = get_media_details(media_type, tmdb_id)
     cast = get_media_credits(media_type, tmdb_id)
+    recommendation_data = get_media_recommendations(media_type, tmdb_id)
     season = int(request.GET.get('season', 1))
     episode = int(request.GET.get('episode', 1))
 
@@ -111,13 +112,58 @@ def watch(request, media_type, tmdb_id):
     context = {
         'details': details,
         'cast': cast,
+        'recommendations': recommendation_data['results'] if recommendation_data else [],
+        'recommendations_has_more': recommendation_data['total_pages'] > 1 if recommendation_data else False,
+        'recommendations_error': recommendation_data is None,
+        'continue_watching_item': {
+            'id': tmdb_id,
+            'title': (details.get('title') or details.get('name') or 'Untitled') if details else 'Untitled',
+            'poster_path': details.get('poster_path') if details else None,
+            'media_type': media_type,
+            'vote_average': details.get('vote_average') if details else None,
+            'season': season,
+            'episode': episode,
+        },
         'servers': servers,
         'media_type': media_type,
+        'tmdb_id': tmdb_id,
         'season': season,
         'episode': episode,
         'episodes_list': episodes_list,
     }
     return render(request, 'catalog/watch.html', context)
+
+def media_recommendations_api(request, media_type, tmdb_id):
+    if media_type not in {'movie', 'tv'}:
+        return JsonResponse({'error': 'Unsupported media type.'}, status=404)
+
+    try:
+        page = int(request.GET.get('page', 2))
+    except ValueError:
+        return JsonResponse({'error': 'Page must be a number.'}, status=400)
+
+    if not 2 <= page <= 500:
+        return JsonResponse({'error': 'Page must be between 2 and 500.'}, status=400)
+
+    recommendation_data = get_media_recommendations(media_type, tmdb_id, page)
+    if recommendation_data is None:
+        return JsonResponse({'error': 'Could not load recommendations.'}, status=502)
+
+    results = [
+        {
+            'id': item.get('id'),
+            'title': item.get('title') or item.get('name') or 'Untitled',
+            'media_type': media_type,
+            'poster_path': item.get('poster_path'),
+            'vote_average': item.get('vote_average'),
+            'release_date': item.get('release_date') or item.get('first_air_date') or '',
+        }
+        for item in recommendation_data['results']
+    ]
+    return JsonResponse({
+        'results': results,
+        'has_more': page < recommendation_data['total_pages'],
+    })
 
 def actor_detail(request, person_id):
     person, filmography = get_person_details(person_id)

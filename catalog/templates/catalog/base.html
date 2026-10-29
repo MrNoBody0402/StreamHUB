@@ -137,9 +137,7 @@
 <body class="bg-[#07080c] text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-rose-500 selection:text-white antialiased relative overflow-x-hidden">
     
     <!-- Multi-layered Ambient Background Glows -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-rose-600/15 blur-[160px] pointer-events-none -z-10 rounded-full animate-ambient-glow"></div>
-    <div class="fixed top-[40%] right-[-100px] w-[500px] h-[500px] bg-purple-600/10 blur-[180px] pointer-events-none -z-10 rounded-full"></div>
-    <div class="fixed bottom-0 left-[-100px] w-[500px] h-[500px] bg-amber-600/8 blur-[180px] pointer-events-none -z-10 rounded-full"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] bg-rose-600/10 blur-[150px] pointer-events-none -z-10 rounded-full animate-ambient-glow"></div>
 
     <!-- Glassmorphic Header Navigation -->
     <header class="sticky top-0 z-50 glass-nav shadow-glass">
@@ -157,13 +155,18 @@
                             <span class="font-display font-black text-2xl tracking-wider bg-gradient-to-r from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
                                 STREAM<span class="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">HUB</span>
                             </span>
-                            <span class="px-1.5 py-0.5 text-[9px] font-extrabold tracking-widest uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-md shadow-sm">HD</span>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <!-- Right Controls: Watchlist Button & Search Input -->
+            <nav aria-label="Main navigation" class="hidden lg:flex items-center gap-1">
+                <a href="/" class="px-3 py-2 rounded-lg text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition">Explore</a>
+                <a href="/?type=movie" class="px-3 py-2 rounded-lg text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition">Movies</a>
+                <a href="/?type=tv" class="px-3 py-2 rounded-lg text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition">TV Series</a>
+            </nav>
+
+            <!-- Search and watchlist controls -->
             <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
                 <a href="{% url 'watchlist' %}" class="relative group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-xs font-bold text-zinc-200 hover:text-white transition border border-white/10 hover:border-rose-500/40 shadow-sm active:scale-95">
                     <span class="text-rose-500 group-hover:scale-110 transition transform">❤️</span>
@@ -204,28 +207,28 @@
             </div>
         </div>
 
-        <!-- Scrollable Genres Bar -->
+        <!-- Scrollable genre shortcuts -->
         <div class="border-t border-white/5 bg-zinc-950/40 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
-                <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider shrink-0 mr-1">Genres:</span>
-                <a href="/?genre=action" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">💥 Action</a>
-                <a href="/?genre=adventure" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🤠 Adventure</a>
-                <a href="/?genre=animation" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🎨 Animation</a>
-                <a href="/?genre=comedy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">😂 Comedy</a>
-                <a href="/?genre=crime" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🕵️ Crime</a>
-                <a href="/?genre=drama" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🎭 Drama</a>
-                <a href="/?genre=fantasy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🧙‍♂️ Fantasy</a>
-                <a href="/?genre=horror" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">👻 Horror</a>
-                <a href="/?genre=mystery" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🔍 Mystery</a>
-                <a href="/?genre=romance" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">💖 Romance</a>
-                <a href="/?genre=scifi" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🚀 Sci-Fi</a>
-                <a href="/?genre=thriller" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">⚡ Thriller</a>
+            <div aria-label="Browse by genre" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+                <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider shrink-0 mr-1">Genres</span>
+                <a href="/?genre=action" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Action</a>
+                <a href="/?genre=adventure" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Adventure</a>
+                <a href="/?genre=animation" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Animation</a>
+                <a href="/?genre=comedy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Comedy</a>
+                <a href="/?genre=crime" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Crime</a>
+                <a href="/?genre=drama" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Drama</a>
+                <a href="/?genre=fantasy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Fantasy</a>
+                <a href="/?genre=horror" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Horror</a>
+                <a href="/?genre=mystery" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Mystery</a>
+                <a href="/?genre=romance" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Romance</a>
+                <a href="/?genre=scifi" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Sci-Fi</a>
+                <a href="/?genre=thriller" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">Thriller</a>
             </div>
         </div>
     </header>
     
     <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-9 flex-grow w-full">
         {% block content %}{% endblock %}
     </main>
 
