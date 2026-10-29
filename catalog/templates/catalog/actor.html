@@ -63,30 +63,36 @@
         </div>
     </div>
 
-    <!-- Filmography Grid -->
+    <!-- Filmography Grid Header -->
     <div class="mb-6 flex items-center justify-between">
         <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
             <span class="w-1.5 h-6 bg-rose-500 rounded-full shadow-glow-sm"></span>
             Known Works & Filmography
         </h2>
-        {% if filmography %}
+        {% if total_works %}
         <span class="text-xs font-semibold text-zinc-400 bg-zinc-900/80 px-3 py-1 rounded-full border border-white/5">
-            {{ filmography|length }} titles
+            {{ total_works }} total titles
         </span>
         {% endif %}
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+    <!-- Filmography Grid Container -->
+    <div id="filmography-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
         {% for work in filmography %}
-            {% if work.poster_path %}
-            <a href="{% url 'watch' work.media_type|default:'movie' work.id %}" class="group relative flex flex-col transition duration-300 transform hover:-translate-y-2">
+            <a href="{% url 'watch' work.media_type work.id %}" class="group relative flex flex-col transition duration-300 transform hover:-translate-y-2">
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
-                    <img src="https://image.tmdb.org/t/p/w500{{ work.poster_path }}" alt="{% if work.title %}{{ work.title }}{% else %}{{ work.name }}{% endif %}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    {% if work.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ work.poster_path }}" alt="{{ work.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    {% else %}
+                        <div class="w-full h-full bg-zinc-900 flex flex-col items-center justify-center p-2 text-center text-zinc-600 text-[10px]">
+                            <span>No Poster</span>
+                        </div>
+                    {% endif %}
                     
                     {% if work.vote_average %}
                     <div class="absolute top-2.5 left-2.5 pointer-events-none">
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
-                            ⭐ {{ work.vote_average|floatformat:1 }}
+                            ⭐ {{ work.vote_average }}
                         </span>
                     </div>
                     {% endif %}
@@ -101,16 +107,110 @@
 
                 <div class="mt-2.5">
                     <p class="font-bold text-xs sm:text-sm text-zinc-100 group-hover:text-rose-400 truncate transition">
-                        {% if work.title %}{{ work.title }}{% else %}{{ work.name }}{% endif %}
+                        {{ work.title }}
                     </p>
                     {% if work.character %}
                     <p class="text-[10px] text-zinc-400 truncate mt-0.5">as {{ work.character }}</p>
                     {% endif %}
                 </div>
             </a>
-            {% endif %}
         {% endfor %}
+    </div>
+
+    <!-- Show More & Continuous Scroll Control -->
+    <div class="mt-12 text-center flex flex-col items-center justify-center gap-4">
+        <button id="load-more-actor-btn" onclick="loadNextActorPage()" class="px-8 py-3.5 rounded-2xl glass-card hover:bg-zinc-800 text-rose-400 font-bold text-xs border border-white/10 shadow-lg hover:border-rose-500/50 transition transform active:scale-95 flex items-center gap-2.5">
+            <span>Show More Titles</span>
+            <span id="actor-load-spinner" class="hidden w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></span>
+        </button>
     </div>
     {% endif %}
 </div>
+
+<!-- Continuous Scroll Script for Actor Works -->
+<script>
+    const personId = "{{ person.id }}";
+    let actorPage = 1;
+    let isActorLoading = false;
+    let hasMoreActorPages = true;
+
+    async function loadNextActorPage() {
+        if (isActorLoading || !hasMoreActorPages) return;
+
+        isActorLoading = true;
+        const spinner = document.getElementById('actor-load-spinner');
+        const loadBtn = document.getElementById('load-more-actor-btn');
+        if (spinner) spinner.classList.remove('hidden');
+
+        actorPage += 1;
+
+        try {
+            const response = await fetch(`/api/actor/${personId}/works/?page=${actorPage}`);
+            const data = await response.json();
+
+            if (!data.works || data.works.length === 0) {
+                hasMoreActorPages = false;
+                if (loadBtn) {
+                    loadBtn.innerText = "All Works Loaded";
+                    loadBtn.classList.add('opacity-60', 'pointer-events-none');
+                }
+            } else {
+                const grid = document.getElementById('filmography-grid');
+                if (grid) {
+                    data.works.forEach(work => {
+                        const card = document.createElement('a');
+                        card.href = `/watch/${work.media_type}/${work.id}/`;
+                        card.className = "group relative flex flex-col transition duration-300 transform hover:-translate-y-2";
+                        
+                        const posterHtml = work.poster_path 
+                            ? `<img src="https://image.tmdb.org/t/p/w500${work.poster_path}" alt="${work.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`
+                            : `<div class="w-full h-full bg-zinc-900 flex flex-col items-center justify-center p-2 text-center text-zinc-600 text-[10px]"><span>No Poster</span></div>`;
+                            
+                        card.innerHTML = `
+                            <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
+                                ${posterHtml}
+                                ${work.vote_average ? `
+                                <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
+                                        ⭐ ${work.vote_average}
+                                    </span>
+                                </div>` : ''}
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
+                                        <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2.5">
+                                <p class="font-bold text-xs sm:text-sm text-zinc-100 group-hover:text-rose-400 truncate transition">${work.title}</p>
+                                ${work.character ? `<p class="text-[10px] text-zinc-400 truncate mt-0.5">as ${work.character}</p>` : ''}
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+
+                if (!data.has_more) {
+                    hasMoreActorPages = false;
+                    if (loadBtn) {
+                        loadBtn.innerText = "All Works Loaded";
+                        loadBtn.classList.add('opacity-60', 'pointer-events-none');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Error loading actor works:", error);
+        } finally {
+            isActorLoading = false;
+            if (spinner) spinner.classList.add('hidden');
+        }
+    }
+
+    // Scroll listener for continuous scrolling
+    window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+            loadNextActorPage();
+        }
+    });
+</script>
 {% endblock %}

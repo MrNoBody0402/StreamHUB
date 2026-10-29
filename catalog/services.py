@@ -10,11 +10,17 @@ HEADERS = {
 
 GENRES = {
     'action': 28,
+    'adventure': 12,
     'animation': 16,
     'comedy': 35,
+    'crime': 80,
     'drama': 18,
+    'fantasy': 14,
     'horror': 27,
+    'mystery': 9648,
+    'romance': 10749,
     'scifi': 878,
+    'thriller': 53,
 }
 
 def get_media_list(media_type="movie", category="popular", page=1, genre_id=None):
@@ -49,7 +55,7 @@ def get_media_credits(media_type, tmdb_id):
     try:
         response = requests.get(url, headers=HEADERS)
         if response.status_code == 200:
-            return response.json().get('cast', [])[:12]  # Top 12 actors
+            return response.json().get('cast', [])[:12]
     except Exception as e:
         print(f"Error fetching credits for {media_type} {tmdb_id}: {e}")
     return []
@@ -70,8 +76,7 @@ def get_person_details(person_id):
         c_res = requests.get(credits_url, headers=HEADERS)
         if c_res.status_code == 200:
             results = c_res.json().get('cast', [])
-            # Sort works by popularity
-            filmography = sorted(results, key=lambda x: x.get('popularity', 0), reverse=True)[:24]
+            filmography = sorted(results, key=lambda x: x.get('popularity', 0), reverse=True)
     except Exception as e:
         print(f"Error fetching person data for {person_id}: {e}")
         

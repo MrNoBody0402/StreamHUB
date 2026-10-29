@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<!-- Top Controls: Type Switcher (All / Movies / Series) & Active Genre Filter -->
+<!-- Top Controls: Type Switcher & Active Genre Badge -->
 <div class="flex flex-wrap items-center justify-between gap-4 mb-8 glass-card p-3 sm:p-4 rounded-2xl shadow-glass">
     <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
         <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mr-1 sm:mr-2 hidden sm:inline">Browse:</span>
@@ -26,7 +26,7 @@
 
     {% if selected_genre %}
     <div class="flex items-center gap-2">
-        <span class="text-xs text-zinc-400">Genre:</span>
+        <span class="text-xs text-zinc-400">Genre Filter:</span>
         <a href="/?{% if type_filter %}type={{ type_filter }}{% endif %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-600/20 text-rose-300 border border-rose-500/30 hover:bg-rose-600/30 transition">
             <span class="capitalize">{{ selected_genre }}</span>
             <span class="w-4 h-4 rounded-full bg-rose-500/30 flex items-center justify-center text-[10px]">✕</span>
@@ -57,7 +57,6 @@
                     <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                         <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}" alt="{% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                         
-                        <!-- Top Badges Overlay -->
                         <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
                             {% if item.vote_average %}
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
@@ -69,7 +68,6 @@
                             </span>
                         </div>
 
-                        <!-- Hover Play Overlay -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
                                 <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -125,13 +123,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if movie.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if movie.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ movie.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-600/80 backdrop-blur-md text-white border border-white/10 shadow-sm ml-auto capitalize">
+                            {{ selected_genre }}
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -160,13 +161,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" alt="{{ show.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if show.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if show.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ show.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-600/80 backdrop-blur-md text-white border border-white/10 shadow-sm ml-auto capitalize">
+                            {{ selected_genre }}
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -184,7 +188,6 @@
     </div>
     {% endif %}
 
-    <!-- Show More & Loading Controls -->
     <div class="mt-12 text-center flex flex-col items-center justify-center gap-4">
         <button id="load-more-btn" onclick="loadNextPage()" class="px-8 py-3.5 rounded-2xl glass-card hover:bg-zinc-800 text-rose-400 font-bold text-xs border border-white/10 shadow-lg hover:border-rose-500/50 transition transform active:scale-95 flex items-center gap-2">
             <span>Show More Titles</span>
@@ -196,16 +199,12 @@
     <!-- Default Showcase View: Featured Hero Banner -->
     {% if hero_item %}
     <div class="relative w-full min-h-[460px] sm:h-[520px] rounded-3xl overflow-hidden mb-12 border border-white/10 shadow-2xl group flex flex-col justify-end">
-        <!-- Backdrop Poster -->
         <img src="https://image.tmdb.org/t/p/original{{ hero_item.backdrop_path }}" alt="{% if hero_item.title %}{{ hero_item.title }}{% else %}{{ hero_item.name }}{% endif %}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out">
         
-        <!-- Cinematic Dark Gradients -->
         <div class="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/65 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#07080c]/90 via-[#07080c]/40 to-transparent"></div>
 
-        <!-- Hero Content Overlay -->
         <div class="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col items-start max-w-3xl">
-            
             <div class="flex flex-wrap items-center gap-2.5 mb-3">
                 <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-glow-sm flex items-center gap-1.5 border border-white/15">
                     <img src="{% static 'catalog/logo-icon.svg' %}" class="w-3.5 h-3.5 rounded" alt="StreamHUB"> STREAMHUB PREMIERE
@@ -254,13 +253,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if movie.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if movie.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ movie.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-md text-rose-300 border border-white/10 shadow-sm ml-auto">
+                            Movie
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -279,13 +281,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if movie.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if movie.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ movie.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-md text-rose-300 border border-white/10 shadow-sm ml-auto">
+                            Movie
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -319,13 +324,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" alt="{{ show.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if show.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if show.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ show.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-md text-rose-300 border border-white/10 shadow-sm ml-auto">
+                            TV Series
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -344,13 +352,16 @@
                 <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-card border border-white/10 group-hover:border-rose-500/60 group-hover:shadow-[0_12px_30px_-5px_rgba(225,29,72,0.35)] transition-all duration-300">
                     <img src="https://image.tmdb.org/t/p/w500{{ show.poster_path }}" alt="{{ show.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     
-                    {% if show.vote_average %}
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none">
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        {% if show.vote_average %}
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-black/60 backdrop-blur-md text-amber-300 border border-white/10 flex items-center gap-1 shadow-sm">
                             ⭐ {{ show.vote_average|floatformat:1 }}
                         </span>
+                        {% endif %}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/60 backdrop-blur-md text-rose-300 border border-white/10 shadow-sm ml-auto">
+                            TV Series
+                        </span>
                     </div>
-                    {% endif %}
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-glow-md transform scale-75 group-hover:scale-100 transition duration-300">
@@ -368,7 +379,6 @@
     </div>
     {% endif %}
 
-    <!-- Show More & Continuous Scroll Trigger -->
     <div class="mt-14 mb-10 text-center flex flex-col items-center justify-center gap-4">
         <button id="load-more-btn" onclick="loadNextPage()" class="px-8 py-3.5 rounded-2xl glass-card hover:bg-zinc-800 text-rose-400 font-bold text-xs border border-white/10 shadow-lg hover:border-rose-500/50 transition transform active:scale-95 flex items-center gap-2.5">
             <span>Show More Titles</span>
@@ -377,7 +387,6 @@
     </div>
 {% endif %}
 
-<!-- Continuous Scroll Script -->
 <script>
     let currentPage = 1;
     let isLoading = false;

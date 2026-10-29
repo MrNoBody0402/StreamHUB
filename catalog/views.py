@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from .services import (
     get_media_list, get_media_details, get_media_credits, 
     get_person_details, search_media, GENRES
@@ -97,18 +98,14 @@ def watch(request, media_type, tmdb_id):
     if media_type == 'movie':
         servers = [
             {'name': 'Server 1 (VidLink)', 'url': f"https://vidlink.pro/movie/{tmdb_id}"},
-            {'name': 'Server 2 (SmashyStream)', 'url': f"https://player.smashy.stream/movie/{tmdb_id}"},
-            {'name': 'Server 3 (AutoEmbed)', 'url': f"https://player.autoembed.cc/embed/movie/{tmdb_id}"},
-            {'name': 'Server 4 (2Embed)', 'url': f"https://www.2embed.cc/embed/{tmdb_id}"},
-            {'name': 'Server 5 (VidSrc VIP)', 'url': f"https://vidsrc.vip/embed/movie/{tmdb_id}"},
+            {'name': 'Server 2 (2Embed)', 'url': f"https://www.2embed.cc/embed/{tmdb_id}"},
+            {'name': 'Server 3 (VidSrc.me)', 'url': f"https://vidsrc.me/embed/movie/{tmdb_id}"},
         ]
     else:
         servers = [
             {'name': 'Server 1 (VidLink)', 'url': f"https://vidlink.pro/tv/{tmdb_id}/{season}/{episode}"},
-            {'name': 'Server 2 (SmashyStream)', 'url': f"https://player.smashy.stream/tv/{tmdb_id}?s={season}&e={episode}"},
-            {'name': 'Server 3 (AutoEmbed)', 'url': f"https://player.autoembed.cc/embed/tv/{tmdb_id}/{season}/{episode}"},
-            {'name': 'Server 4 (2Embed)', 'url': f"https://www.2embed.cc/embedtv/{tmdb_id}&s={season}&e={episode}"},
-            {'name': 'Server 5 (VidSrc VIP)', 'url': f"https://vidsrc.vip/embed/tv/{tmdb_id}/{season}/{episode}"},
+            {'name': 'Server 2 (2Embed)', 'url': f"https://www.2embed.cc/embedtv/{tmdb_id}&s={season}&e={episode}"},
+            {'name': 'Server 3 (VidSrc.me)', 'url': f"https://vidsrc.me/embed/tv/{tmdb_id}/{season}/{episode}"},
         ]
 
     context = {
@@ -124,11 +121,97 @@ def watch(request, media_type, tmdb_id):
 
 def actor_detail(request, person_id):
     person, filmography = get_person_details(person_id)
+    
+    # Process filmography to ensure media_type and title fields exist
+    processed_filmography = []
+    if filmography:
+        for item in filmography:
+            # Fallback determination for media_type
+            m_type = item.get('media_type')
+            if not m_type:
+                m_type = 'tv' if 'first_air_date' in item or 'name' in item else 'movie'
+            
+            display_title = item.get('title') or item.get('name') or 'Untitled'
+            
+            processed_filmography.append({
+                'id': item.get('id'),
+                'title': display_title,
+                'media_type': m_type,
+                'poster_path': item.get('poster_path'),
+                'vote_average': round(item.get('vote_average', 0), 1) if item.get('vote_average') else None,
+                'character': item.get('character', ''),
+            })
+    
+    # Initial load of 12 works
+    initial_works = processed_filmography[:12]
+    
     context = {
         'person': person,
-        'filmography': filmography,
+        'filmography': initial_works,
+        'total_works': len(processed_filmography),
     }
     return render(request, 'catalog/actor.html', context)
 
+def actor_works_api(request, person_id):
+    """API endpoint to fetch chunked actor filmography for infinite scrolling."""
+    page = int(request.GET.get('page', 1))
+    page_size = 12
+    
+    _, filmography = get_person_details(person_id)
+    
+    processed_filmography = []
+    if filmography:
+        for item in filmography:
+            m_type = item.get('media_type')
+            if not m_type:
+                m_type = 'tv' if 'first_air_date' in item or 'name' in item else 'movie'
+            
+            display_title = item.get('title') or item.get('name') or 'Untitled'
+            
+            processed_filmography.append({
+                'id': item.get('id'),
+                'title': display_title,
+                'media_type': m_type,
+                'poster_path': item.get('poster_path'),
+                'vote_average': round(item.get('vote_average', 0), 1) if item.get('vote_average') else None,
+                'character': item.get('character', ''),
+            })
+            
+    start_idx = (page - 1) * page_size
+    end_idx = start_idx + page_size
+    
+    chunk = processed_filmography[start_idx:end_idx]
+    has_more = end_idx < len(processed_filmography)
+    
+    return JsonResponse({
+        'works': chunk,
+        'has_more': has_more
+    })
+
 def watchlist(request):
     return render(request, 'catalog/watchlist.html')
+
+def search_suggestions(request):
+    query = request.GET.get('q', '').strip()
+    if not query or len(query) < 2:
+        return JsonResponse({'results': []})
+
+    raw_results = search_media(query)
+    cleaned_results = []
+
+    for item in raw_results[:7]:
+        media_type = item.get('media_type', 'movie')
+        title = item.get('title') or item.get('name') or 'Untitled'
+        release_date = item.get('release_date') or item.get('first_air_date') or ''
+        year = release_date[:4] if release_date else ''
+        
+        cleaned_results.append({
+            'id': item.get('id'),
+            'title': title,
+            'media_type': media_type,
+            'poster_path': item.get('poster_path'),
+            'year': year,
+            'vote_average': round(item.get('vote_average', 0), 1),
+        })
+
+    return JsonResponse({'results': cleaned_results})

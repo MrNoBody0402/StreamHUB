@@ -12,12 +12,12 @@
     <link rel="icon" type="image/svg+xml" href="{% static 'catalog/logo-icon.svg' %}">
     <link rel="alternate icon" type="image/x-icon" href="{% static 'catalog/favicon.ico' %}">
 
-    <!-- Google Fonts: Outfit (Headings) & Plus Jakarta Sans (Body) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN with Custom Theme Configuration -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -57,8 +57,8 @@
     <style>
         /* Modern Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #090a0f;
@@ -102,6 +102,12 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+        .glass-dropdown {
+            background: rgba(13, 15, 21, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
         .glass-pill {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(10px);
@@ -113,21 +119,18 @@
             border-color: rgba(225, 29, 72, 0.4);
         }
 
-        /* Input styling */
-        .search-input-focus {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
         .search-input-focus:focus {
             box-shadow: 0 0 25px rgba(225, 29, 72, 0.4);
             border-color: #f43f5e;
             background: rgba(18, 21, 32, 0.95);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        .animate-spin-fast {
-            animation: spin 0.6s linear infinite;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -142,13 +145,11 @@
     <header class="sticky top-0 z-50 glass-nav shadow-glass">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
             
-            <!-- Left Branding & Primary Links -->
+            <!-- Left Branding -->
             <div class="flex items-center gap-6 lg:gap-8">
                 <a href="/" class="group flex items-center gap-3 active:scale-95 transition transform duration-200" title="StreamHUB Home">
                     <div class="relative">
-                        <img src="{% static 'catalog/logo-icon.svg' %}" 
-                             alt="StreamHUB Emblem" 
-                             class="w-10 h-10 rounded-xl shadow-glow-sm group-hover:shadow-glow-md group-hover:scale-105 transition duration-300">
+                        <img src="{% static 'catalog/logo-icon.svg' %}" alt="StreamHUB Emblem" class="w-10 h-10 rounded-xl shadow-glow-sm group-hover:scale-105 transition duration-300">
                         <div class="absolute -inset-1 bg-gradient-to-r from-rose-500 to-amber-500 rounded-xl blur opacity-0 group-hover:opacity-40 transition duration-300 -z-10"></div>
                     </div>
                     <div class="flex flex-col">
@@ -160,40 +161,18 @@
                         </div>
                     </div>
                 </a>
-                
-                <!-- Quick Genre Pills (Desktop) -->
-                <nav class="hidden lg:flex items-center gap-1.5 text-xs font-semibold">
-                    <a href="/?genre=action" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
-                        <span>💥 Action</span>
-                    </a>
-                    <a href="/?genre=comedy" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
-                        <span>😂 Comedy</span>
-                    </a>
-                    <a href="/?genre=scifi" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
-                        <span>🚀 Sci-Fi</span>
-                    </a>
-                    <a href="/?genre=horror" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
-                        <span>👻 Horror</span>
-                    </a>
-                    <a href="/?genre=animation" class="glass-pill px-3.5 py-1.5 rounded-full text-zinc-300 hover:text-white transition duration-200 flex items-center gap-1.5">
-                        <span>🎨 Animation</span>
-                    </a>
-                </nav>
             </div>
 
             <!-- Right Controls: Watchlist Button & Search Input -->
             <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-                
-                <!-- Watchlist Quick Access with Live Badge -->
                 <a href="{% url 'watchlist' %}" class="relative group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-xs font-bold text-zinc-200 hover:text-white transition border border-white/10 hover:border-rose-500/40 shadow-sm active:scale-95">
                     <span class="text-rose-500 group-hover:scale-110 transition transform">❤️</span>
                     <span class="hidden sm:inline">Watchlist</span>
                     <span id="nav-watchlist-count" class="hidden px-1.5 py-0.2 text-[10px] font-extrabold rounded-full bg-rose-600 text-white shadow-sm">0</span>
                 </a>
 
-                <!-- Animated Search Form -->
                 <form action="/" method="GET" id="search-form" onsubmit="handleSearchSubmit(event)" class="relative flex items-center gap-2 flex-grow sm:flex-grow-0">
-                    <div class="relative w-full sm:w-64">
+                    <div class="relative w-full sm:w-72">
                         <input 
                             type="text" 
                             name="q" 
@@ -213,12 +192,34 @@
                             </svg>
                         </div>
                         <span class="hidden md:flex absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[9px] font-mono text-zinc-500 bg-zinc-800/80 rounded border border-white/5 pointer-events-none">/</span>
+
+                        <div id="search-dropdown" class="hidden absolute left-0 right-0 top-full mt-2 glass-dropdown rounded-2xl shadow-2xl overflow-hidden z-50 max-h-[380px] overflow-y-auto divide-y divide-white/5">
+                        </div>
                     </div>
 
                     <button type="submit" id="search-btn" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition duration-200 active:scale-95 shadow-glow-sm hover:shadow-glow-md flex items-center justify-center shrink-0">
                         <span>Search</span>
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Scrollable Genres Bar -->
+        <div class="border-t border-white/5 bg-zinc-950/40 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+                <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider shrink-0 mr-1">Genres:</span>
+                <a href="/?genre=action" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">💥 Action</a>
+                <a href="/?genre=adventure" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🤠 Adventure</a>
+                <a href="/?genre=animation" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🎨 Animation</a>
+                <a href="/?genre=comedy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">😂 Comedy</a>
+                <a href="/?genre=crime" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🕵️ Crime</a>
+                <a href="/?genre=drama" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🎭 Drama</a>
+                <a href="/?genre=fantasy" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🧙‍♂️ Fantasy</a>
+                <a href="/?genre=horror" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">👻 Horror</a>
+                <a href="/?genre=mystery" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🔍 Mystery</a>
+                <a href="/?genre=romance" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">💖 Romance</a>
+                <a href="/?genre=scifi" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">🚀 Sci-Fi</a>
+                <a href="/?genre=thriller" class="glass-pill px-3 py-1 rounded-full text-zinc-300 hover:text-white transition whitespace-nowrap shrink-0">⚡ Thriller</a>
             </div>
         </div>
     </header>
@@ -234,9 +235,7 @@
             <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
                 <div class="flex flex-col gap-2">
                     <div class="flex items-center justify-center md:justify-start gap-2.5">
-                        <img src="{% static 'catalog/logo-icon.svg' %}" 
-                             alt="StreamHUB Emblem" 
-                             class="w-7 h-7 rounded-lg shadow-sm">
+                        <img src="{% static 'catalog/logo-icon.svg' %}" alt="StreamHUB Emblem" class="w-7 h-7 rounded-lg shadow-sm">
                         <span class="font-display font-black text-lg tracking-wider text-white">
                             STREAM<span class="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">HUB</span>
                         </span>
@@ -261,7 +260,7 @@
         </div>
     </footer>
 
-    <!-- Global Helpers & Interactive Scripts -->
+    <!-- Global Helpers & Interactive Search Scripts -->
     <script>
         function updateWatchlistCounter() {
             try {
@@ -289,11 +288,79 @@
             }
         }
 
-        // Quick Keyboard Shortcut: Press '/' to focus search
+        let searchDebounceTimer;
+        const searchInput = document.getElementById('search-input');
+        const searchDropdown = document.getElementById('search-dropdown');
+        const searchIcon = document.getElementById('search-icon');
+        const searchSpinner = document.getElementById('search-spinner');
+
+        if (searchInput && searchDropdown) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                clearTimeout(searchDebounceTimer);
+
+                if (query.length < 2) {
+                    searchDropdown.classList.add('hidden');
+                    if (searchIcon) searchIcon.classList.remove('hidden');
+                    if (searchSpinner) searchSpinner.classList.add('hidden');
+                    return;
+                }
+
+                if (searchIcon) searchIcon.classList.add('hidden');
+                if (searchSpinner) searchSpinner.classList.remove('hidden');
+
+                searchDebounceTimer = setTimeout(async () => {
+                    try {
+                        const res = await fetch(`/api/search/?q=${encodeURIComponent(query)}`);
+                        const data = await res.json();
+                        
+                        if (data.results && data.results.length > 0) {
+                            searchDropdown.innerHTML = data.results.map(item => `
+                                <a href="/watch/${item.media_type}/${item.id}/" class="flex items-center gap-3 p-2.5 hover:bg-rose-600/20 transition group">
+                                    <div class="w-10 h-14 bg-zinc-900 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:border-rose-500/50">
+                                        ${item.poster_path 
+                                            ? `<img src="https://image.tmdb.org/t/p/w92${item.poster_path}" alt="${item.title}" class="w-full h-full object-cover">`
+                                            : `<div class="w-full h-full flex items-center justify-center text-zinc-600 text-[10px]">No Pic</div>`
+                                        }
+                                    </div>
+                                    <div class="flex-grow min-w-0">
+                                        <p class="text-xs font-bold text-white group-hover:text-rose-400 truncate">${item.title}</p>
+                                        <div class="flex items-center gap-2 text-[10px] text-zinc-400 mt-0.5">
+                                            <span class="uppercase font-extrabold text-rose-400">${item.media_type}</span>
+                                            ${item.year ? `<span>• ${item.year}</span>` : ''}
+                                            ${item.vote_average ? `<span class="text-amber-300">⭐ ${item.vote_average}</span>` : ''}
+                                        </div>
+                                    </div>
+                                </a>
+                            `).join('');
+                            searchDropdown.classList.remove('hidden');
+                        } else {
+                            searchDropdown.innerHTML = `
+                                <div class="p-3 text-center text-xs text-zinc-400 font-medium">
+                                    No live matches found for "${query}"
+                                </div>
+                            `;
+                            searchDropdown.classList.remove('hidden');
+                        }
+                    } catch (err) {
+                        console.error("Live search error:", err);
+                    } finally {
+                        if (searchIcon) searchIcon.classList.remove('hidden');
+                        if (searchSpinner) searchSpinner.classList.add('hidden');
+                    }
+                }, 300);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.add('hidden');
+                }
+            });
+        }
+
         document.addEventListener('keydown', (e) => {
             if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 e.preventDefault();
-                const searchInput = document.getElementById('search-input');
                 if (searchInput) searchInput.focus();
             }
         });
